@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Pedidos da loja · Bonese</title>
+<meta name="theme-color" content="#7C3331">
+<link rel="icon" href="../assets/img/icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Aleo:wght@400;600;700;800&family=Londrina+Solid:wght@400;900&display=swap" rel="stylesheet">
+<style id="pagina">@page { size: 80mm auto; margin: 0; }</style>
+<style>
+:root {
+  --mostarda: #e9b94f; --coral: #c24e3f; --vinho: #7c3331;
+  --ink: #2a1513; --ink-2: #6f5a52; --paper: #fffaf1; --paper-2: #f6ecdc; --line: #e8d7c0;
+  --ok: #1a9e4b;
+  --display: 'Flicker', 'Londrina Solid', Impact, sans-serif;
+  --body: 'Aleo', Georgia, serif;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; min-height: 100vh; background: var(--paper-2); color: var(--ink); font-family: var(--body); font-size: 15px; }
+button, input { font: inherit; }
+button { cursor: pointer; }
+.faixa-marca { display: flex; height: 6px; } .faixa-marca i { flex: 1; }
+.faixa-marca i:nth-child(1) { background: var(--mostarda); } .faixa-marca i:nth-child(2) { background: var(--coral); } .faixa-marca i:nth-child(3) { background: var(--vinho); }
+
+/* entrada */
+#entrada { min-height: 100vh; display: grid; place-items: center; background: var(--vinho); padding: 24px; }
+.caixa { width: 100%; max-width: 380px; background: var(--paper); border-radius: 22px; padding: 28px 26px; text-align: center; box-shadow: 0 30px 80px rgba(0,0,0,.35); }
+.caixa .selo-logo { height: 120px; margin: -86px auto 10px; display: block; filter: drop-shadow(0 12px 20px rgba(0,0,0,.35)); }
+.caixa h1 { margin: 0; font-family: var(--display); font-weight: 400; font-size: 40px; letter-spacing: .02em; color: var(--vinho); text-transform: uppercase; }
+.caixa p { margin: 6px 0 18px; color: var(--ink-2); }
+.caixa input { width: 100%; height: 54px; border-radius: 12px; border: 1.5px solid var(--line); padding: 0 16px; font-size: 18px; text-align: center; letter-spacing: .06em; background: #fff; }
+.caixa input:focus { outline: none; border-color: var(--coral); box-shadow: 0 0 0 3px rgba(194,78,63,.15); }
+.caixa button { margin-top: 12px; width: 100%; height: 54px; border: 0; border-radius: 12px; background: var(--coral); color: #fff; font-family: var(--display); font-size: 26px; letter-spacing: .04em; text-transform: uppercase; }
+.caixa button:disabled { opacity: .6; }
+.caixa .erro { margin-top: 10px; min-height: 20px; color: var(--coral); font-weight: 700; font-size: 14px; }
+.caixa .voltar { display: inline-block; margin-top: 8px; font-size: 13px; color: var(--ink-2); }
+
+/* painel */
+header { display: flex; align-items: center; gap: 16px; padding: 10px 24px; background: var(--vinho); color: #fff; flex-wrap: wrap; }
+header img { height: 62px; }
+header h1 { margin: 0; font-family: var(--display); font-weight: 400; font-size: 38px; letter-spacing: .02em; line-height: 1; text-transform: uppercase; color: var(--mostarda); }
+header h1 small { display: block; font-family: var(--body); font-size: 14px; font-weight: 600; letter-spacing: 0; color: #fff; opacity: .9; margin-top: 2px; text-transform: none; }
+.estado { margin-left: auto; display: flex; align-items: center; gap: 10px; padding: 9px 16px; border-radius: 999px; background: rgba(0,0,0,.25); font-weight: 700; }
+.estado i { width: 12px; height: 12px; border-radius: 50%; background: #ffb3a6; }
+.estado.ok i { background: #3ddc6e; box-shadow: 0 0 0 4px rgba(61,220,110,.28); }
+.resumo { display: flex; gap: 10px; flex-wrap: wrap; padding: 14px 24px 0; }
+.resumo div { background: #fff; border: 1.5px solid var(--line); border-radius: 14px; padding: 10px 16px; min-width: 150px; }
+.resumo small { display: block; font-size: 12px; font-weight: 700; color: var(--ink-2); text-transform: uppercase; letter-spacing: .06em; }
+.resumo b { font-family: var(--display); font-weight: 400; font-size: 30px; line-height: 1.1; color: var(--vinho); }
+.barra { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 22px; padding: 12px 24px; background: #fff; border-bottom: 1px solid var(--line); }
+.grupo { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; }
+.seg { display: inline-flex; border: 1.5px solid var(--line); border-radius: 10px; overflow: hidden; }
+.seg button { border: 0; background: #fff; padding: 7px 12px; font-weight: 700; color: var(--ink-2); }
+.seg button.on { background: var(--coral); color: #fff; }
+.chave { width: 46px; height: 26px; border-radius: 13px; border: 0; background: var(--line); position: relative; }
+.chave::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: left .15s; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+.chave.on { background: var(--ok); } .chave.on::after { left: 23px; }
+.acao { border: 1.5px solid var(--line); background: var(--paper); border-radius: 10px; padding: 8px 14px; font-weight: 700; color: var(--ink); }
+.acao:hover { border-color: var(--coral); color: var(--coral); }
+.acao.dir { margin-left: auto; }
+.faixa { margin: 14px 24px 0; padding: 14px 18px; border-radius: 12px; font-weight: 600; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+.faixa.som { background: #fff3cf; color: #5d4300; cursor: pointer; font-weight: 700; }
+.faixa.dica { background: #fff; border: 1.5px dashed var(--line); color: var(--ink-2); }
+.faixa.dica b { color: var(--ink); }
+.faixa .acao { background: var(--coral); border-color: var(--coral); color: #fff; }
+.filtros { display: flex; gap: 8px; flex-wrap: wrap; padding: 16px 24px 0; }
+.filtros button { border: 1.5px solid var(--line); background: #fff; border-radius: 999px; padding: 7px 14px; font-weight: 700; color: var(--ink-2); }
+.filtros button.on { background: var(--vinho); border-color: var(--vinho); color: #fff; }
+.filtros button i { font-style: normal; opacity: .75; margin-left: 4px; }
+main { padding: 8px 24px 40px; }
+.vazio { text-align: center; padding: 60px 20px; color: var(--ink-2); }
+.vazio b { display: block; font-size: 20px; color: var(--ink); margin-bottom: 6px; }
+.dia { margin: 18px 0 10px; font-family: var(--display); font-size: 28px; color: var(--vinho); }
+.dia small { font-family: var(--body); font-size: 14px; font-weight: 700; color: var(--ink-2); }
+.lista { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 14px; }
+.ped { background: #fff; border: 1.5px solid var(--line); border-radius: 16px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; }
+.ped.novo { border-color: var(--coral); box-shadow: 0 0 0 4px rgba(194,78,63,.18); }
+.ped.saiu { opacity: .55; }
+.ped-topo { display: flex; align-items: baseline; gap: 10px; }
+.ped-topo b { font-family: var(--display); font-weight: 400; font-size: 34px; letter-spacing: .02em; line-height: 1; }
+.ped-topo .hora { color: var(--ink-2); font-weight: 600; }
+.ped-topo .selo { margin-left: auto; padding: 4px 10px 2px; border-radius: 6px; background: var(--vinho); color: #fff; font-family: var(--display); font-size: 20px; letter-spacing: .04em; text-transform: uppercase; }
+.ped-topo .selo.ret { background: var(--mostarda); color: var(--ink); }
+.itens { margin: 0; padding: 0; list-style: none; }
+.itens li { padding: 5px 0; border-bottom: 1px dashed var(--line); }
+.itens li:last-child { border-bottom: 0; }
+.itens .nm { display: flex; justify-content: space-between; gap: 10px; font-weight: 800; font-size: 16px; }
+.itens .det { font-size: 13px; color: var(--ink-2); font-weight: 600; }
+.itens .sem { display: inline-block; margin-top: 3px; padding: 2px 8px; border-radius: 5px; background: var(--coral); color: #fff; font-weight: 800; font-size: 13px; }
+.itens .obs { margin-top: 3px; font-size: 13px; font-weight: 700; color: var(--vinho); }
+.itens .brinde { color: var(--ok); font-weight: 800; font-size: 14px; }
+.info { font-size: 14px; line-height: 1.5; }
+.tot { display: flex; justify-content: space-between; font-weight: 800; font-size: 17px; }
+.botoes { display: flex; flex-wrap: wrap; gap: 8px; }
+.botoes button { border: 0; border-radius: 10px; padding: 9px 12px; font-weight: 700; background: var(--paper-2); color: var(--ink); }
+.botoes .imp { background: var(--coral); color: #fff; }
+.botoes .wa { background: var(--ok); color: #fff; }
+.carimbo { font-size: 12px; font-weight: 700; color: var(--ok); }
+.carimbo.nao { color: var(--coral); }
+@media (max-width: 600px) {
+  header, .barra, main, .resumo, .filtros { padding-left: 14px; padding-right: 14px; }
+  .faixa { margin-left: 14px; margin-right: 14px; }
+  header h1 { font-size: 30px; }
+  .lista { grid-template-columns: 1fr; }
+  .acao.dir { margin-left: 0; }
+}
+#ticket { display: none; }
+@media print {
+  body { background: #fff; }
+  body > *:not(#ticket) { display: none !important; }
+  #ticket { display: block; }
+}
+/* comanda (impressora térmica) */
+.tk { width: var(--papel, 72mm); padding: 2mm 1mm 6mm; font-family: Arial, Helvetica, sans-serif; color: #000; font-size: 12.5px; line-height: 1.3; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.tk .c { text-align: center; }
+.tk .marca { font-size: 20px; font-weight: 900; letter-spacing: .5px; }
+.tk .num { font-size: 26px; font-weight: 900; margin-top: 2px; }
+.tk .modo { margin: 5px 0; padding: 4px 0; background: #000; color: #fff; text-align: center; font-size: 20px; font-weight: 900; letter-spacing: 1px; }
+.tk hr { border: 0; border-top: 1.5px dashed #000; margin: 5px 0; }
+.tk .it { margin: 4px 0 6px; }
+.tk .itl { display: flex; justify-content: space-between; gap: 6px; font-size: 15px; font-weight: 900; }
+.tk .det { font-size: 12.5px; font-weight: 700; }
+.tk .sem { display: inline-block; margin-top: 2px; padding: 1px 5px; background: #000; color: #fff; font-size: 13.5px; font-weight: 900; }
+.tk .obs { margin-top: 2px; font-size: 13.5px; font-weight: 700; }
+.tk .lin { display: flex; justify-content: space-between; gap: 6px; }
+.tk .total { font-size: 17px; font-weight: 900; }
+.tk .pag { font-size: 14px; font-weight: 900; }
+.tk .pe { margin-top: 6px; font-size: 11px; text-align: center; }
+</style>
+</head>
+<body>
+
+<div id="entrada" hidden>
+  <form class="caixa" id="form-senha">
+    <img class="selo-logo" src="../assets/img/logo.png" alt="Bonese">
+    <h1>Pedidos da loja</h1>
+    <p>Digite a senha da loja. Neste aparelho só precisa fazer isso uma vez.</p>
+    <input id="senha" type="password" autocomplete="current-password" placeholder="Senha" required>
+    <button type="submit">Entrar</button>
+    <div class="erro" id="erro"></div>
+    <a class="voltar" href="../">← voltar para o cardápio</a>
+  </form>
+</div>
+
+<div id="painel" hidden>
+  <div class="faixa-marca"><i></i><i></i><i></i></div>
+  <header>
+    <img src="../assets/img/logo.png" alt="Bonese">
+    <h1>Pedidos da loja<small>Bonese Food Park · Lajeado</small></h1>
+    <div class="estado" id="estado"><i></i><span>Conectando...</span></div>
+  </header>
+  <div class="barra">
+    <div class="grupo">Imprimir sozinho <button class="chave" id="auto" aria-label="Imprimir pedidos automaticamente"></button></div>
+    <div class="grupo">Vias <span class="seg" id="vias"><button data-v="1">1</button><button data-v="2">2</button></span></div>
+    <div class="grupo">Papel <span class="seg" id="papel"><button data-v="80">80 mm</button><button data-v="58">58 mm</button></span></div>
+    <div class="grupo">Som <button class="chave" id="som" aria-label="Som de aviso"></button></div>
+    <button class="acao dir" id="teste-ped">Testar</button>
+    <button class="acao" id="sair">Sair</button>
+  </div>
+  <div class="faixa som" id="aviso-som" hidden>Clique aqui para ativar o som de aviso dos pedidos.</div>
+  <div class="faixa dica" id="dica-atalho">
+    <span><b>Imprimir sem precisar clicar em "Imprimir":</b> baixe o atalho, dê dois cliques nele e use sempre essa janela. A impressora da loja precisa ser a impressora padrão do Windows.</span>
+    <button class="acao" id="baixar-atalho">Baixar atalho</button>
+  </div>
+  <div class="resumo" id="resumo"></div>
+  <div class="filtros" id="filtros"></div>
+  <main id="main"></main>
+</div>
+<div id="ticket"></div>
+
+<script src="../assets/js/config.js"></script>
+<script>
+"use strict";
+// Pedidos chegam criptografados pelo canal abaixo; a chave da loja fica guardada aqui, protegida pela senha.
+const SERVIDOR = (window.CONFIG && CONFIG.pedidosOnline && CONFIG.pedidosOnline.servidor) || "https://ntfy.sh";
+const CANAL = (window.CONFIG && CONFIG.pedidosOnline && CONFIG.pedidosOnline.canal) || "bonese-enc-441afd9cea175148f8dc9dbb";
+const LOJA = "Bonese Food Park";
+const COFRE = { sal: "86jMTCchc5XqFnRqEVwEIQ==", iv: "7bVvm2hnbfC6aBc8", dados: "5Ll6ng/E8G1OrqoZrIandmjJ9xlI1Rl2cnaV+pBq6/YWEOw73GH2C/YW38qhss1cyCvtVO2o0rz4ZimwLtuUlXhNlnOSwWwxdLCMmZLlPZf39VfVPLsEhuBtE1MKxkrvMIPaXYYc3pbn9qfreOoNqCVNEy/zTquURGIBz+rHsrTL7na471Xg8Fj1R7oSKdGqjtd9YyvkzsltXyvlxmMStjZbgVyYI8fO0Y0nGzJYfjnUrvt6QopSulppUwqcyos2XcxPMp0/f53AA5B9Lxk56nxLNXNrQu0L+0i2y/71M7+i7s0=" };
+
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+const moeda = (v) => Number(v || 0).toFixed(2).replace(".", ",");
+const brl = (v) => "R$ " + moeda(v);
+const espera = (ms) => new Promise((r) => setTimeout(r, ms));
+const LS = {
+  get(k, d) { try { const v = localStorage.getItem("bonese_loja_" + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem("bonese_loja_" + k, JSON.stringify(v)); } catch (e) {} },
+  del(k) { try { localStorage.removeItem("bonese_loja_" + k); } catch (e) {} },
+};
+
+const cfg = Object.assign({ auto: true, vias: 1, papel: 80, som: true }, LS.get("cfg", {}));
+let pedidos = LS.get("pedidos", []);
+const vistos = new Set(LS.get("vistos", []));
+let ultimoId = LS.get("ultimoId", null);
+let CHAVE = LS.get("chave", null);
+let filtro = "todos";
+
+// ---------- criptografia ----------
+const ub64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+const b64 = (buf) => { const a = new Uint8Array(buf); let s = ""; for (let i = 0; i < a.length; i++) s += String.fromCharCode(a[i]); return btoa(s); };
+const CURVA = { name: "ECDH", namedCurve: "P-256" };
+async function abrirCofre(senha) {
+  const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(senha.trim().toLowerCase()), "PBKDF2", false, ["deriveKey"]);
+  const k = await crypto.subtle.deriveKey({ name: "PBKDF2", salt: ub64(COFRE.sal), iterations: 310000, hash: "SHA-256" }, base, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
+  const pt = await crypto.subtle.decrypt({ name: "AES-GCM", iv: ub64(COFRE.iv) }, k, ub64(COFRE.dados));
+  return JSON.parse(new TextDecoder().decode(pt));
+}
+let chavePriv = null;
+async function abrir(texto) {
+  const [v, eph, iv, ct] = texto.trim().split(".");
+  if (v !== "BD1" || !ct) throw new Error("formato");
+  chavePriv = chavePriv || (await crypto.subtle.importKey("jwk", CHAVE, CURVA, false, ["deriveKey"]));
+  const pub = await crypto.subtle.importKey("raw", ub64(eph), CURVA, false, []);
+  const k = await crypto.subtle.deriveKey({ name: "ECDH", public: pub }, chavePriv, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
+  const pt = await crypto.subtle.decrypt({ name: "AES-GCM", iv: ub64(iv) }, k, ub64(ct));
+  return JSON.parse(new TextDecoder().decode(pt));
+}
+async function cifrar(texto) {
+  const pub = await crypto.subtle.importKey("jwk", { kty: CHAVE.kty, crv: CHAVE.crv, x: CHAVE.x, y: CHAVE.y }, CURVA, false, []);
+  const ef = await crypto.subtle.generateKey(CURVA, true, ["deriveKey"]);
+  const k = await crypto.subtle.deriveKey({ name: "ECDH", public: pub }, ef.privateKey, { name: "AES-GCM", length: 256 }, false, ["encrypt"]);
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const ct = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, k, new TextEncoder().encode(texto));
+  return ["BD1", b64(await crypto.subtle.exportKey("raw", ef.publicKey)), b64(iv), b64(ct)].join(".");
+}
+
+// ---------- som ----------
+let audio = null;
+function bip() {
+  if (!cfg.som) return;
+  try {
+    audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+    const t0 = audio.currentTime;
+    [880, 1175, 1568, 880, 1175, 1568].forEach((f, i) => {
+      const o = audio.createOscillator(), g = audio.createGain();
+      o.type = "triangle"; o.frequency.value = f;
+      g.gain.setValueAtTime(0.0001, t0 + i * 0.16);
+      g.gain.exponentialRampToValueAtTime(0.5, t0 + i * 0.16 + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + i * 0.16 + 0.15);
+      o.connect(g).connect(audio.destination); o.start(t0 + i * 0.16); o.stop(t0 + i * 0.16 + 0.16);
+    });
+  } catch (e) {}
+}
+function checarSom() {
+  try { audio = audio || new (window.AudioContext || window.webkitAudioContext)(); $("#aviso-som").hidden = !(cfg.som && audio.state !== "running"); } catch (e) {}
+}
+document.addEventListener("click", () => { if (audio && audio.state !== "running") audio.resume().then(checarSom).catch(() => {}); }, { capture: true });
+
+// ---------- comanda ----------
+const NOMES_PAG = { pix: "PIX", credit: "CARTÃO DE CRÉDITO", debit: "CARTÃO DE DÉBITO", cash: "DINHEIRO" };
+function textoPagamento(p) {
+  let t = NOMES_PAG[p.p] || String(p.p || "").toUpperCase();
+  if (p.p === "pix") t += " (conferir comprovante no WhatsApp)";
+  if (p.p === "credit" || p.p === "debit") t += p.m === "entrega" ? " (levar maquininha)" : " (na retirada)";
+  if (p.p === "cash") t += p.tr ? ` (troco para ${brl(p.tr)}${p.tx !== null ? ` = ${brl(p.tr - p.tot)}` : ""})` : " (sem troco)";
+  return t;
+}
+const foneLimpo = (p) => (p.c.fone || "").replace(/\D/g, "");
+function ticketHTML(p, via, vias) {
+  const d = new Date(p.t);
+  const hora = d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }) + " " + d.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" });
+  const itens = p.i.map((it) => `<div class="it">
+      <div class="itl"><span>${it[1]}x ${esc(it[0]).toUpperCase()}</span><span>${moeda(it[2])}</span></div>
+      ${(it[5] || []).map((x) => `<div class="det">${esc(x)}</div>`).join("")}
+      ${it[3] && it[3].length ? `<div class="sem">SEM: ${esc(it[3].join(", ")).toUpperCase()}</div>` : ""}
+      ${it[4] ? `<div class="obs">OBS: ${esc(it[4])}</div>` : ""}
+    </div>`).join("");
+  const brindes = (p.g || []).map((g) => `<div class="it"><div class="itl"><span>1x BRINDE: ${esc(g).toUpperCase()}</span><span>0,00</span></div></div>`).join("");
+  const ent = p.m === "entrega";
+  return `<div class="tk">
+    <div class="c marca">BONESE FOOD PARK</div>
+    <div class="c">${hora}</div>
+    <div class="c num">PEDIDO #${esc(p.n)}</div>
+    <div class="modo">${ent ? "ENTREGA" : "RETIRADA"}</div>
+    ${itens}${brindes}
+    <hr>
+    <div class="lin"><span>Subtotal</span><span>${moeda(p.s)}</span></div>
+    ${ent ? `<div class="lin"><span>Entrega</span><span>${p.tx === null ? "a combinar" : p.tx === 0 ? "grátis" : moeda(p.tx)}</span></div>` : ""}
+    ${p.d ? `<div class="lin"><span>Desconto Pix</span><span>-${moeda(p.d)}</span></div>` : ""}
+    <div class="lin total"><span>TOTAL</span><span>${brl(p.tot)}${ent && p.tx === null ? " + entr." : ""}</span></div>
+    <hr>
+    <div class="pag">${esc(textoPagamento(p))}</div>
+    <hr>
+    <div><b>CLIENTE:</b> ${esc(p.c.nome)}</div>
+    <div><b>FONE:</b> ${esc(p.c.fone)}</div>
+    ${ent ? `<div><b>END:</b> ${esc(p.c.rua)}, ${esc(p.c.num)}</div><div>${esc(p.c.bairro)}${p.c.comp ? " · " + esc(p.c.comp) : ""}</div>${p.c.ref ? `<div><b>REF:</b> ${esc(p.c.ref)}</div>` : ""}` : ""}
+    <div class="pe">pedido pelo app${p.o && p.o !== "app" ? " · " + esc(p.o) : ""}${vias > 1 ? ` · via ${via}/${vias}` : ""}</div>
+  </div>`;
+}
+function ajustarPapel() {
+  $("#pagina").textContent = `@page { size: ${cfg.papel}mm auto; margin: 0; }`;
+  document.documentElement.style.setProperty("--papel", cfg.papel === 58 ? "48mm" : "72mm");
+}
+let fila = Promise.resolve();
+function imprimir(p, id) {
+  fila = fila.then(async () => {
+    for (let v = 1; v <= cfg.vias; v++) {
+      $("#ticket").innerHTML = ticketHTML(p, v, cfg.vias);
+      await espera(150);
+      window.print();
+      await espera(400);
+    }
+    const reg = pedidos.find((x) => x.id === id);
+    if (reg) { reg.impresso = Date.now(); LS.set("pedidos", pedidos); desenhar(); }
+  }).catch(() => {});
+  return fila;
+}
+
+// ---------- lista ----------
+const ehHoje = (t) => new Date(t).toDateString() === new Date().toDateString();
+function desenharResumo() {
+  const hoje = pedidos.filter((r) => ehHoje(r.p.t));
+  const fat = hoje.reduce((s, r) => s + Number(r.p.tot || 0), 0);
+  const ent = hoje.filter((r) => r.p.m === "entrega").length;
+  $("#resumo").innerHTML = `
+    <div><small>Pedidos hoje</small><b>${hoje.length}</b></div>
+    <div><small>Total hoje</small><b>${brl(fat)}</b></div>
+    <div><small>Entregas / Retiradas</small><b>${ent} / ${hoje.length - ent}</b></div>
+    <div><small>Ticket médio</small><b>${brl(hoje.length ? fat / hoje.length : 0)}</b></div>`;
+  const cont = { todos: pedidos.length, abertos: pedidos.filter((r) => !r.saiu).length, saiu: pedidos.filter((r) => r.saiu).length };
+  const nomes = { todos: "Todos", abertos: "Em aberto", saiu: "Já saíram" };
+  $("#filtros").innerHTML = Object.keys(nomes).map((k) => `<button data-f="${k}" class="${filtro === k ? "on" : ""}">${nomes[k]}<i>${cont[k]}</i></button>`).join("");
+}
+function desenhar() {
+  desenharResumo();
+  const main = $("#main");
+  const lista = pedidos.filter((r) => filtro === "todos" || (filtro === "saiu" ? r.saiu : !r.saiu));
+  if (!lista.length) {
+    main.innerHTML = pedidos.length
+      ? `<div class="vazio"><b>Nada neste filtro</b>Troque o filtro acima para ver os outros pedidos.</div>`
+      : `<div class="vazio"><b>Nenhum pedido ainda</b>Deixe esta tela aberta. Cada pedido do app aparece aqui na hora, com aviso sonoro, e vai direto para a impressora.</div>`;
+    return;
+  }
+  const porDia = {};
+  lista.forEach((r) => {
+    let k = new Date(r.p.t).toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "2-digit" });
+    k = k.charAt(0).toUpperCase() + k.slice(1);
+    (porDia[k] = porDia[k] || []).push(r);
+  });
+  main.innerHTML = Object.entries(porDia).map(([dia, l]) => `<div class="dia">${esc(dia)} <small>· ${l.length} pedido${l.length > 1 ? "s" : ""} · ${brl(l.reduce((s, r) => s + Number(r.p.tot || 0), 0))}</small></div><div class="lista">${l.map(cartao).join("")}</div>`).join("");
+}
+function cartao(r) {
+  const p = r.p, ent = p.m === "entrega";
+  const fone = foneLimpo(p);
+  return `<div class="ped${r.novo ? " novo" : ""}${r.saiu ? " saiu" : ""}">
+    <div class="ped-topo"><b>#${esc(p.n)}</b><span class="hora">${new Date(p.t).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}</span><span class="selo${ent ? "" : " ret"}">${ent ? "Entrega" : "Retirada"}</span></div>
+    <ul class="itens">${p.i.map((it) => `<li><div class="nm"><span>${it[1]}x ${esc(it[0])}</span><span>${brl(it[2])}</span></div>${(it[5] || []).length ? `<div class="det">${(it[5] || []).map(esc).join(" · ")}</div>` : ""}${it[3] && it[3].length ? `<span class="sem">SEM ${esc(it[3].join(", ")).toUpperCase()}</span>` : ""}${it[4] ? `<div class="obs">Obs.: ${esc(it[4])}</div>` : ""}</li>`).join("")}${(p.g || []).map((g) => `<li><span class="brinde">🎁 Brinde: ${esc(g)}</span></li>`).join("")}</ul>
+    <div class="tot"><span>Total</span><span>${brl(p.tot)}${ent && p.tx === null ? " + entrega" : ""}</span></div>
+    <div class="info"><b>Pagamento:</b> ${esc(textoPagamento(p))}<br><b>${esc(p.c.nome)}</b> · ${esc(p.c.fone)}${ent ? `<br>${esc(p.c.rua)}, ${esc(p.c.num)} · ${esc(p.c.bairro)}${p.c.comp ? " · " + esc(p.c.comp) : ""}${p.c.ref ? `<br>Ref.: ${esc(p.c.ref)}` : ""}` : ""}</div>
+    <div class="carimbo${r.impresso ? "" : " nao"}">${r.impresso ? "Impresso às " + new Date(r.impresso).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }) : "Ainda não impresso"}</div>
+    <div class="botoes">
+      <button class="imp" data-imp="${esc(r.id)}">Imprimir${r.impresso ? " de novo" : ""}</button>
+      ${fone ? `<button class="wa" data-wa="${esc(r.id)}">WhatsApp do cliente</button>` : ""}
+      <button data-saiu="${esc(r.id)}">${r.saiu ? "Voltar" : (ent ? "Saiu p/ entrega" : "Retirado")}</button>
+    </div>
+  </div>`;
+}
+$("#main").addEventListener("click", (e) => {
+  const b = e.target.closest("button");
+  if (!b) return;
+  const id = b.dataset.imp || b.dataset.wa || b.dataset.saiu;
+  const r = pedidos.find((x) => x.id === id);
+  if (!r) return;
+  if (b.dataset.imp) imprimir(r.p, r.id);
+  else if (b.dataset.wa) {
+    const msg = `Olá, ${r.p.c.nome.split(" ")[0]}! Aqui é da Bonese, sobre o seu pedido #${r.p.n}.`;
+    window.open(`https://wa.me/55${foneLimpo(r.p)}?text=${encodeURIComponent(msg)}`, "_blank");
+  } else if (b.dataset.saiu) { r.saiu = !r.saiu; r.novo = false; LS.set("pedidos", pedidos); desenhar(); }
+});
+$("#filtros").addEventListener("click", (e) => { const b = e.target.closest("[data-f]"); if (b) { filtro = b.dataset.f; desenhar(); } });
+
+// ---------- recebimento ----------
+let novos = 0;
+async function receber(ev) {
+  if (vistos.has(ev.id)) return;
+  vistos.add(ev.id); LS.set("vistos", [...vistos].slice(-500));
+  let corpo = ev.message || "";
+  if (ev.attachment && ev.attachment.url) { try { corpo = await fetch(ev.attachment.url).then((r) => r.text()); } catch (e) { return; } }
+  let p;
+  try { p = await abrir(corpo); } catch (e) { return; }
+  if (!p || !Array.isArray(p.i) || !p.c) return;
+  const reg = { id: ev.id, p, novo: true };
+  pedidos.unshift(reg);
+  pedidos = pedidos.slice(0, 400);
+  LS.set("pedidos", pedidos);
+  desenhar();
+  bip();
+  novos++; document.title = `(${novos}) Novo pedido · Bonese`;
+  if (cfg.auto) imprimir(p, reg.id);
+}
+document.addEventListener("visibilitychange", () => { if (!document.hidden) { novos = 0; document.title = "Pedidos da loja · Bonese"; } });
+
+let es = null, tentativas = 0;
+function estado(ok) {
+  $("#estado").classList.toggle("ok", ok);
+  $("#estado span").textContent = ok ? "Recebendo pedidos" : "Sem conexão, tentando de novo...";
+}
+function conectar() {
+  const since = ultimoId || Math.floor(Date.now() / 1000);
+  es = new EventSource(`${SERVIDOR}/${CANAL}/sse?since=${encodeURIComponent(since)}`);
+  es.onopen = () => { tentativas = 0; estado(true); };
+  es.onmessage = (e) => {
+    let ev; try { ev = JSON.parse(e.data); } catch (x) { return; }
+    if (ev.event !== "message") return;
+    ultimoId = ev.id; LS.set("ultimoId", ev.id);
+    receber(ev);
+  };
+  es.onerror = () => { estado(false); es.close(); setTimeout(conectar, Math.min(30000, 2000 * ++tentativas)); };
+}
+
+// ---------- controles ----------
+function desenharControles() {
+  $("#auto").classList.toggle("on", cfg.auto);
+  $("#som").classList.toggle("on", cfg.som);
+  $$("#vias button").forEach((b) => b.classList.toggle("on", Number(b.dataset.v) === cfg.vias));
+  $$("#papel button").forEach((b) => b.classList.toggle("on", Number(b.dataset.v) === cfg.papel));
+  ajustarPapel(); checarSom();
+}
+const salvar = () => { LS.set("cfg", cfg); desenharControles(); };
+$("#auto").addEventListener("click", () => { cfg.auto = !cfg.auto; salvar(); });
+$("#som").addEventListener("click", () => { cfg.som = !cfg.som; salvar(); if (cfg.som) bip(); });
+$$("#vias button").forEach((b) => b.addEventListener("click", () => { cfg.vias = Number(b.dataset.v); salvar(); }));
+$$("#papel button").forEach((b) => b.addEventListener("click", () => { cfg.papel = Number(b.dataset.v); salvar(); }));
+$("#aviso-som").addEventListener("click", async () => { try { await audio.resume(); } catch (e) {} checarSom(); });
+
+// pedido de teste: faz o caminho completo (internet > esta tela > impressora)
+const exemplo = () => ({ v: 1, n: "TESTE", t: Date.now(), m: "entrega", c: { nome: "Cliente Teste", fone: "(51) 90000-0000", rua: "Rua de Teste", num: "100", bairro: "Centro", comp: "Casa", ref: "Em frente à praça" }, i: [["BBB · Bonese Burger Bacon", 2, 129.8, ["Tomate"], "bem passado", ["Combo: + Fritas + Fruki Guaraná 350ml", "+ Cheddar"]], ["Refrigerante lata", 1, 8, [], "", ["Sabor: Coca-Cola Zero"]]], g: [], s: 137.8, tx: 5, d: 0, tot: 142.8, p: "cash", tr: 150, o: "teste" });
+$("#teste-ped").addEventListener("click", async () => {
+  const b = $("#teste-ped"); b.disabled = true; b.textContent = "Enviando...";
+  try {
+    const r = await fetch(`${SERVIDOR}/${CANAL}`, { method: "POST", body: await cifrar(JSON.stringify(exemplo())) });
+    b.textContent = r.ok ? "Enviado, já vai aparecer" : "Falhou: veja a internet";
+  } catch (e) { b.textContent = "Falhou: veja a internet"; }
+  setTimeout(() => { b.disabled = false; b.textContent = "Testar"; }, 4000);
+});
+$("#sair").addEventListener("click", () => {
+  if (!confirm("Sair deste aparelho? Os pedidos deixam de chegar aqui até entrar de novo com a senha.")) return;
+  LS.del("chave"); location.reload();
+});
+
+// atalho do Windows que abre esta página imprimindo direto (sem a janela de "Imprimir")
+$("#baixar-atalho").addEventListener("click", () => {
+  const url = location.href.split("#")[0];
+  const bat = [
+    "@echo off",
+    "rem Abre os pedidos da Bonese imprimindo direto na impressora padrao do Windows.",
+    'set "PERFIL=%LOCALAPPDATA%\\BoneseLoja"',
+    'set "EDGE=%ProgramFiles(x86)%\\Microsoft\\Edge\\Application\\msedge.exe"',
+    'if not exist "%EDGE%" set "EDGE=%ProgramFiles%\\Microsoft\\Edge\\Application\\msedge.exe"',
+    `start "" "%EDGE%" --user-data-dir="%PERFIL%" --kiosk-printing --autoplay-policy=no-user-gesture-required --no-first-run --app="${url}"`,
+  ].join("\r\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([bat], { type: "application/octet-stream" }));
+  a.download = "Pedidos Bonese.bat";
+  document.body.appendChild(a); a.click(); a.remove();
+});
+
+async function telaLigada() { try { if ("wakeLock" in navigator) await navigator.wakeLock.request("screen"); } catch (e) {} }
+document.addEventListener("visibilitychange", () => { if (!document.hidden) telaLigada(); });
+
+function iniciarPainel() {
+  $("#entrada").hidden = true;
+  $("#painel").hidden = false;
+  pedidos.forEach((r) => (r.novo = false));
+  desenharControles();
+  desenhar();
+  telaLigada();
+  conectar();
+  setInterval(desenharResumo, 60000);
+}
+
+$("#form-senha").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const btn = $("#form-senha button"); btn.disabled = true; $("#erro").textContent = "";
+  try {
+    CHAVE = await abrirCofre($("#senha").value);
+    LS.set("chave", CHAVE);
+    iniciarPainel();
+  } catch (x) {
+    $("#erro").textContent = "Senha incorreta.";
+  }
+  btn.disabled = false;
+});
+
+if (CHAVE) iniciarPainel();
+else { $("#entrada").hidden = false; $("#senha").focus(); }
+</script>
+</body>
+</html>
