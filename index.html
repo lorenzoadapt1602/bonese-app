@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Bonese Food Park · Peça online</title>
+  <meta name="description" content="Peça seu lanche no Bonese Food Park, em Lajeado/RS. Delivery ou retirada, com pagamento em Pix, cartão ou dinheiro.">
+  <meta name="theme-color" content="#EDB43C">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/img/icon.svg">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-word" aria-hidden="true">BONESE</div>
+    <div class="wrap">
+      <div class="topbar">
+        <div class="brand">
+          <div class="logo" aria-hidden="true"><span>BON</span><span>ESE</span></div>
+          <div>
+            <div class="brand-name">Bonese Food Park</div>
+            <div class="brand-sub" id="brandSub">Lajeado · RS</div>
+          </div>
+        </div>
+        <div class="status" id="status" aria-live="polite"></div>
+      </div>
+
+      <div class="headline">
+        <h1>Bateu<br>a fome?</h1>
+        <span class="sticker">O melhor…<br>é daqui!</span>
+      </div>
+
+      <div class="hero-controls">
+        <div class="mode" id="modeSwitch" role="group" aria-label="Como você quer receber"></div>
+        <label class="search">
+          <span class="search-ico" id="searchIco"></span>
+          <input id="search" type="search" placeholder="Buscar lanche, porção, bebida…" autocomplete="off" aria-label="Buscar no cardápio">
+        </label>
+      </div>
+    </div>
+    <svg class="brush" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 40V24c48-6 96 3 150-1s104-12 170-5 128 10 196 3 122-14 192-6 140 11 210 4 118-9 172-3 76 4 110 2V40z"/>
+    </svg>
+  </header>
+
+  <nav class="cats" aria-label="Categorias"><div class="wrap cats-row" id="cats"></div></nav>
+
+  <main class="wrap" id="main">
+    <div class="highlights" id="highlights"></div>
+    <div id="menu"></div>
+  </main>
+
+  <footer class="site-foot" id="footer"></footer>
+
+  <button class="cart-bar" id="cartBar" type="button" hidden></button>
+
+  <div class="overlay" id="overlay"></div>
+  <section class="sheet" id="productSheet" role="dialog" aria-modal="true" aria-label="Detalhes do item" aria-hidden="true"></section>
+  <section class="sheet" id="cartSheet" role="dialog" aria-modal="true" aria-label="Sua sacola" aria-hidden="true"></section>
+  <section class="view" id="checkoutView" role="dialog" aria-modal="true" aria-label="Finalizar pedido" aria-hidden="true"></section>
+  <section class="view" id="successView" role="dialog" aria-modal="true" aria-label="Pedido enviado" aria-hidden="true"></section>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/menu.js"></script>
+  <script src="assets/js/pix.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

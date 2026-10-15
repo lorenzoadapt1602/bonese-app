@@ -1,0 +1,13 @@
+{
+  "name": "Bonese Food Park",
+  "short_name": "Bonese",
+  "description": "Peça seu lanche no Bonese Food Park – Lajeado/RS",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#110F0E",
+  "theme_color": "#EDB43C",
+  "lang": "pt-BR",
+  "icons": [
+    { "src": "assets/img/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
