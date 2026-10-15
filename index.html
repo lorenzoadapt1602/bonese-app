@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Bonese Food Park · Peça online</title>
   <meta name="description" content="Peça seu lanche no Bonese Food Park, em Lajeado/RS. Delivery ou retirada, com pagamento em Pix, cartão ou dinheiro.">
-  <meta name="theme-color" content="#EDB43C">
+  <meta name="theme-color" content="#7C3331">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="assets/img/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="assets/img/icon.svg">
@@ -13,16 +13,20 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://images.unsplash.com">
+  <!-- Fonte primária do manual: Aleo. Secundária (Flicker) não existe no Google Fonts;
+       Londrina Solid é a alternativa mais próxima. Se tiver o arquivo da Flicker,
+       declare um @font-face 'Flicker' no style.css que ele passa a ser usado. -->
+  <link href="https://fonts.googleapis.com/css2?family=Aleo:wght@400;600;700;800&family=Londrina+Solid:wght@400;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
   <header class="hero">
-    <div class="hero-word" aria-hidden="true">BONESE</div>
+    <div class="hero-bg" id="heroBg" aria-hidden="true"></div>
     <div class="wrap">
       <div class="topbar">
         <div class="brand">
-          <div class="logo" aria-hidden="true"><span>BON</span><span>ESE</span></div>
+          <img class="logo-img" src="assets/img/logo.png" alt="Bonese" width="684" height="1019">
           <div>
             <div class="brand-name">Bonese Food Park</div>
             <div class="brand-sub" id="brandSub">Lajeado · RS</div>
@@ -32,7 +36,7 @@
       </div>
 
       <div class="headline">
-        <h1>Bateu<br>a fome?</h1>
+        <h1>Bateu<br><em>a fome?</em></h1>
         <span class="sticker">O melhor…<br>é daqui!</span>
       </div>
 

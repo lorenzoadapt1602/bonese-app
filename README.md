@@ -42,6 +42,22 @@ Para tirar um item do ar: adicione `available: false` no item (ele aparece como 
 - **BBP "Burger Picles"** não lista picles nos ingredientes
 - "Suco contem" foi mantido como "Suco Contem"
 
+## Identidade visual
+
+Segue o Manual de Identidade Visual da Bonese:
+- **Cores**: `#E9B94F` (P142C), `#C24E3F` (P7417C) e `#7C3331` (P7623C), definidas no topo do `assets/css/style.css`
+- **Fontes**: Aleo (primária, do Google Fonts). A secundária, Flicker, não está no Google Fonts; o app usa a
+  Londrina Solid no lugar. Se o cliente tiver o arquivo da Flicker, coloque-o em `assets/fonts/` e declare
+  um `@font-face { font-family: 'Flicker'; src: url(../fonts/flicker.woff2); }` no CSS. Ela passa a ser usada sozinha.
+- **Logo**: `assets/img/logo.png` (topo) e `assets/img/logo-full.png` (rodapé, com "food truck"), extraídos do manual
+
+## Fotos
+
+As fotos vêm do banco gratuito **Unsplash** (uso comercial liberado). A lista fica no fim do
+`assets/js/menu.js` (bloco `PHOTOS`). Para trocar a foto de um item, cole outro ID do Unsplash ou o
+caminho de uma foto própria do lanche (ex.: `'assets/img/fotos/bbt.jpg'`). O ideal é usar fotos reais
+dos lanches da Bonese.
+
 ## Como colocar no ar (grátis)
 
 Qualquer hospedagem de site estático serve. A mais rápida:
