@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="112" fill="#EDB43C"/>
-  <rect x="136" y="96" width="240" height="320" rx="36" fill="#1A1208"/>
-  <g fill="#EDB43C" font-family="'Bebas Neue', Impact, 'Arial Narrow', sans-serif" font-size="150" text-anchor="middle">
-    <text x="256" y="240">BON</text>
-    <text x="256" y="378">ESE</text>
+  <rect width="512" height="512" rx="112" fill="#7C3331"/>
+  <path d="M146 92 L374 104 L366 418 L138 408 Z" fill="#E9B94F"/>
+  <g fill="#C24E3F" font-family="'Londrina Solid', Impact, 'Arial Narrow', sans-serif" font-size="138" text-anchor="middle">
+    <text x="256" y="238">BON</text>
+    <text x="256" y="372">ESE</text>
   </g>
 </svg>
