@@ -446,7 +446,7 @@
         </div>
       </div>
       <div><h4>Horários</h4><ul class="hours">${hours}</ul></div>
-      <div><h4>Pagamento</h4><p>Pix (QR Code com o valor exato), cartão de crédito e débito ou dinheiro.</p><p>Delivery em ${esc(C.delivery.estimate)} · Retirada em ${esc(C.pickup.estimate)}.</p><div class="made">Made ♥ in Lajeado</div><p class="photo-credit">Fotos ilustrativas: <a href="https://unsplash.com" target="_blank" rel="noopener">Unsplash</a></p></div>
+      <div><h4>Pagamento</h4><p>Pix (QR Code com o valor exato), cartão de crédito e débito ou dinheiro.</p><p>Delivery em ${esc(C.delivery.estimate)} · Retirada em ${esc(C.pickup.estimate)}.</p><div class="made">Made ♥ in Lajeado</div><p class="photo-credit"><a href="admin/">${sv('<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>', 'style="width:12px;height:12px;display:inline;vertical-align:-1px"')} Área da loja</a></p><p class="photo-credit">Fotos ilustrativas: <a href="https://unsplash.com" target="_blank" rel="noopener">Unsplash</a></p></div>
     </div>`;
   }
 
@@ -1084,9 +1084,19 @@
       code, url, t,
       payment: state.payment, mode: state.mode,
       pix: state.payment === 'pix' ? { amount: t.total, code: pixCode(t.total), other: t.feeStatus === 'other' } : null,
+      sent: 'sending',
     };
+    // envia para o painel da loja (criptografado) antes de limpar a sacola
+    const order = state.lastOrder;
+    const sending = window.EnvioPedido
+      ? window.EnvioPedido.enviar(orderPayload(code, t))
+      : Promise.resolve(false);
+    sending.then((ok) => { order.sent = ok ? 'ok' : 'fail'; updateSendStatus(); });
     const w = window.open(url, '_blank');
-    if (!w) setTimeout(() => { location.href = url; }, 400);
+    if (!w) {
+      // sem pop-up: espera o envio terminar (até 3 s) antes de ir para o WhatsApp
+      Promise.race([sending, new Promise((r) => setTimeout(r, 3000))]).then(() => { location.href = url; });
+    }
     state.cart = [];
     state.gifts = [];
     state.change = '';
@@ -1098,6 +1108,53 @@
     updateBadges();
   }
 
+  // pedido compacto que vai para o painel da loja (admin/)
+  function orderPayload(code, t) {
+    const c = state.customer;
+    const ent = state.mode === 'delivery';
+    return {
+      v: 1,
+      n: code,
+      t: Date.now(),
+      m: ent ? 'entrega' : 'retirada',
+      c: {
+        nome: c.name.trim(),
+        fone: c.phone,
+        rua: ent ? c.street.trim() : '',
+        num: ent ? c.number.trim() : '',
+        bairro: ent ? currentBairro() : '',
+        comp: ent ? c.complement.trim() : '',
+        ref: ent ? c.reference.trim() : '',
+      },
+      // [nome, qtd, total, sem, obs, detalhes]
+      i: state.cart.map((it) => {
+        const p = P[it.pid];
+        const det = itemDetails(it).filter((d) => d.cls !== 'rm' && !d.text.startsWith('Obs.')).map((d) => d.text);
+        return [(p.code ? p.code + ' · ' : '') + p.name, it.qty, r2(unitPrice(it) * it.qty), it.removed || [], it.note || '', det];
+      }),
+      g: state.gifts.map((g) => C.promoLongNeck.gifts[g]),
+      s: t.subtotal,
+      tx: ent ? (t.feeStatus === 'other' ? null : t.fee) : 0,
+      d: t.discount,
+      tot: t.total,
+      p: state.payment,
+      tr: state.payment === 'cash' && !state.noChange ? parseMoney(state.change) : 0,
+      o: 'app',
+    };
+  }
+
+  function updateSendStatus() {
+    const el = $('#sendStatus');
+    const o = state.lastOrder;
+    if (!el || !o) return;
+    el.className = 'send-status ' + o.sent;
+    el.textContent = o.sent === 'ok'
+      ? '✓ A loja já recebeu seu pedido'
+      : o.sent === 'fail'
+        ? 'Não conseguimos avisar a loja pela internet. Envie a mensagem no WhatsApp para confirmar.'
+        : 'Enviando para a loja…';
+  }
+
   function renderSuccess() {
     const o = state.lastOrder;
     if (!o) return;
@@ -1106,6 +1163,7 @@
       <div class="big-check">${ICON.check}</div>
       <h2>Pedido feito!</h2>
       <div class="order-code">#${o.code}</div>
+      <div id="sendStatus" class="send-status"></div>
       <p>Abrimos o WhatsApp com seu pedido pronto. <b>Toque em enviar</b> na conversa para a gente confirmar.</p>
       ${o.pix ? `<section class="panel"><h3 class="panel-title">${ICON.pix.replace('<svg', '<svg style="width:22px;height:22px;color:var(--pix)"')}Pague agora com Pix</h3>${pixBoxHTML(o.pix.amount, o.pix.code, o.pix.other ? 'Valor dos itens. A entrega será combinada.' : 'Valor exato do pedido.')}</section>` : ''}
       <section class="panel">
@@ -1119,6 +1177,7 @@
       </div>
     </div></div>`;
     if (o.pix) window.Pix.renderQR($('#successView [data-qr]'), o.pix.code);
+    updateSendStatus();
   }
 
   async function copyText(text, btn) {

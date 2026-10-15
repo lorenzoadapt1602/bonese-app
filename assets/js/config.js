@@ -73,6 +73,14 @@ window.CONFIG = {
   // true = aceita pedido fora do horário (mostra aviso); false = bloqueia o envio
   acceptOrdersWhenClosed: true,
 
+  // Painel da loja (admin/): cada pedido vai criptografado por este canal até a tela da loja.
+  // Só quem tem a senha da loja consegue abrir os pedidos. Não altere sem gerar chaves novas.
+  pedidosOnline: {
+    servidor: 'https://ntfy.sh',
+    canal: 'bonese-enc-441afd9cea175148f8dc9dbb',
+    chavePublica: { kty: 'EC', crv: 'P-256', x: '4TcsfJe4BVPGcdXeDfmzbYj8GDcr8UmSRk6uhLVmJWQ', y: 'WwnDb263dwNKz3TIm-Lydo-ni5WC3WaipBN6-LnlbD0' },
+  },
+
   // Promo "Se liga!": baldinho com 6 long necks ganha uma porção
   promoLongNeck: {
     enabled: true,
