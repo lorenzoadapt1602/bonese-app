@@ -178,6 +178,13 @@
   };
   const svgWrap = (inner) => `<svg viewBox="0 0 120 120" aria-hidden="true">${inner}</svg>`;
   const art = (p) => svgWrap((ART[p.art || CAT[p.cat].art] || ART.burger)(p));
+  // fotos: ID do Unsplash ("photo-...") ou caminho/URL de uma foto própria
+  const photoUrl = (ref, w, h) => (/^(https?:|\.{0,2}\/|assets\/)/.test(ref)
+    ? ref
+    : `https://images.unsplash.com/${ref}?auto=format&fit=crop&w=${w}&h=${h}&q=70`);
+  const photo = (ref, w, h, eager) => (ref
+    ? `<span class="ph-box"><img class="ph" src="${photoUrl(ref, w, h)}" srcset="${photoUrl(ref, w * 2, h * 2)} 2x" alt="" ${eager ? '' : 'loading="lazy"'} decoding="async" onload="this.classList.add('on')" onerror="this.parentNode.remove()"></span>`
+    : '');
   const comboArt = () => svgWrap(`<g transform="translate(-6 14) scale(.78)">${ART.burger()}</g><g transform="translate(54 30) scale(.6)">${ART.fries()}</g>`);
 
   /* ---------------- preços ---------------- */
@@ -326,10 +333,10 @@
     const parts = [];
     const ex = M.products.find((p) => p.combo);
     if (ex) {
-      parts.push(`<button type="button" class="promo mustard" data-goto="burgers"><span class="p-art">${comboArt()}</span><span><h4>Vira combo?</h4><p>Qualquer burger + ${esc(M.comboLabel)}. A partir de ${brl(Math.min(...M.products.filter((p) => p.combo).map((p) => p.combo)))}.</p></span></button>`);
+      parts.push(`<button type="button" class="promo mustard${M.comboPhoto ? ' photo' : ''}" style="--img:url('${M.comboPhoto ? photoUrl(M.comboPhoto, 900, 400) : ''}')" data-goto="burgers"><span class="p-art">${comboArt()}</span><span><h4>Vira combo?</h4><p>Qualquer burger + ${esc(M.comboLabel)}. A partir de ${brl(Math.min(...M.products.filter((p) => p.combo).map((p) => p.combo)))}.</p></span></button>`);
     }
     if (C.promoLongNeck && C.promoLongNeck.enabled) {
-      parts.push(`<button type="button" class="promo coral" data-goto="bebidas"><span class="p-art">${svgWrap(ART.bucket())}</span><span><h4>Se liga!</h4><p>Baldinho com ${C.promoLongNeck.every} long necks ganha uma porção de fritas (tradicional ou crinkle) ou onion rings.</p></span></button>`);
+      parts.push(`<button type="button" class="promo coral${M.bucketPhoto ? ' photo' : ''}" style="--img:url('${M.bucketPhoto ? photoUrl(M.bucketPhoto, 900, 400) : ''}')" data-goto="bebidas"><span class="p-art">${svgWrap(ART.bucket())}</span><span><h4>Se liga!</h4><p>Baldinho com ${C.promoLongNeck.every} long necks ganha uma porção de fritas (tradicional ou crinkle) ou onion rings.</p></span></button>`);
     }
     $('#highlights').innerHTML = parts.join('');
   }
@@ -364,7 +371,7 @@
           ${alt && !soldout ? `<span class="mini">${esc(alt)}</span>` : ''}
         </div>
       </div>
-      <div class="card-art">${art(p)}<span class="card-qty"></span>${soldout ? '' : `<span class="card-add">${ICON.plus}</span>`}</div>
+      <div class="card-art">${art(p)}${photo(p.photo, 116, 116)}<span class="card-qty"></span>${soldout ? '' : `<span class="card-add">${ICON.plus}</span>`}</div>
     </article>`;
   }
 
@@ -430,7 +437,7 @@
     }).join('');
     $('#footer').innerHTML = `<div class="wrap foot-grid">
       <div>
-        <div class="brand"><div class="logo" aria-hidden="true"><span>BON</span><span>ESE</span></div><div><div class="brand-name">${esc(C.storeName)}</div><div class="brand-sub">${esc(C.city)} · ${esc(C.state)}</div></div></div>
+        <div class="brand"><img class="logo-img" src="assets/img/logo-full.png" alt="Bonese food truck" loading="lazy"><div><div class="brand-name">${esc(C.storeName)}</div><div class="brand-sub">${esc(C.city)} · ${esc(C.state)}</div></div></div>
         <p>${esc(C.address)}</p>
         <div class="foot-links">
           <a href="https://www.instagram.com/${C.instagram}/" target="_blank" rel="noopener">${ICON.insta}@${esc(C.instagram)}</a>
@@ -439,7 +446,7 @@
         </div>
       </div>
       <div><h4>Horários</h4><ul class="hours">${hours}</ul></div>
-      <div><h4>Pagamento</h4><p>Pix (QR Code com o valor exato), cartão de crédito e débito ou dinheiro.</p><p>Delivery em ${esc(C.delivery.estimate)} · Retirada em ${esc(C.pickup.estimate)}.</p><div class="made">Made ♥ in Lajeado</div></div>
+      <div><h4>Pagamento</h4><p>Pix (QR Code com o valor exato), cartão de crédito e débito ou dinheiro.</p><p>Delivery em ${esc(C.delivery.estimate)} · Retirada em ${esc(C.pickup.estimate)}.</p><div class="made">Made ♥ in Lajeado</div><p class="photo-credit">Fotos ilustrativas: <a href="https://unsplash.com" target="_blank" rel="noopener">Unsplash</a></p></div>
     </div>`;
   }
 
@@ -602,7 +609,7 @@
       <div class="sheet-grab"></div>
       <button type="button" class="icon-btn sheet-close" data-close aria-label="Fechar">${ICON.close}</button>
       <div class="sheet-scroll">
-        <div class="pd-hero" data-word="${esc(cat.name.toUpperCase())}">${art(p)}</div>
+        <div class="pd-hero${p.photo ? ' has-photo' : ''}" data-word="${esc(cat.name.toUpperCase())}">${art(p)}${photo(p.photo, 580, 270, true)}</div>
         <div class="pd-info">
           ${metaHTML(p)}
           <h2 class="pd-name">${esc(p.name)}</h2>
@@ -742,7 +749,7 @@
       const p = P[it.pid];
       const det = itemDetails(it);
       return `<div class="cart-item" data-key="${it.key}">
-        <div class="ci-art">${art(p)}</div>
+        <div class="ci-art">${art(p)}${photo(p.photo, 58, 58, true)}</div>
         <div>
           <div class="ci-top"><b>${esc(p.name)}</b><span>${brl(unitPrice(it) * it.qty)}</span></div>
           ${det.length ? `<ul class="ci-details">${det.map((d) => `<li class="${d.cls}">${esc(d.text)}</li>`).join('')}</ul>` : '<div style="height:6px"></div>'}
@@ -1242,6 +1249,7 @@
   function init() {
     if (history.state && history.state.bn) history.replaceState(null, '');
     $('#brandSub').innerHTML = `${esc(C.city)} · ${esc(C.state)} <a href="https://www.instagram.com/${C.instagram}/" target="_blank" rel="noopener">${ICON.insta}@${esc(C.instagram)}</a>`;
+    if (M.heroPhoto) $('#heroBg').style.setProperty('--hero-img', `url("${photoUrl(M.heroPhoto, 1400, 900)}")`);
     renderStatus();
     setInterval(renderStatus, 60000);
     renderModeSwitch();
