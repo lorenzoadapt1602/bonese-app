@@ -42,6 +42,30 @@ Para tirar um item do ar: adicione `available: false` no item (ele aparece como 
 - **BBP "Burger Picles"** não lista picles nos ingredientes
 - "Suco contem" foi mantido como "Suco Contem"
 
+## Painel da loja (pedidos)
+
+Endereço: **`/admin/`** (ex.: `https://lorenzoadapt1602.github.io/bonese-app/admin/`), também tem o link
+"Área da loja" no rodapé do cardápio. É protegido por senha. A senha **não** fica no código: ela abre uma
+chave criptografada que está guardada na página.
+
+Como funciona (mesmo modelo do Bagual Dog's):
+1. O cliente finaliza o pedido. O site criptografa o pedido com a chave pública da loja e envia pelo canal
+   do ntfy.sh (`pedidosOnline` no `config.js`). Ninguém além do painel consegue ler.
+2. O painel, aberto no computador ou celular da loja, recebe na hora: **aviso sonoro**, contador na aba e
+   **impressão automática** da comanda (80 mm ou 58 mm, 1 ou 2 vias).
+3. Em cada pedido: **Imprimir**, **WhatsApp do cliente** (abre a conversa com mensagem pronta) e
+   **Saiu p/ entrega / Retirado**. No topo aparece o resumo do dia: pedidos, total e ticket médio.
+4. O botão **Testar** manda um pedido de teste pelo caminho completo.
+5. **Baixar atalho** (Windows): abre o painel imprimindo direto na impressora padrão, sem a janela "Imprimir".
+
+Observações:
+- O painel precisa ficar **aberto** para receber. Se ficar fechado, os pedidos das últimas ~12 h chegam
+  quando ele for aberto de novo (o ntfy guarda por esse tempo). O pedido também continua indo pelo WhatsApp.
+- Os pedidos ficam salvos no próprio aparelho do painel (últimos 400).
+- A senha só precisa ser digitada uma vez por aparelho. "Sair" apaga a chave daquele aparelho.
+- Para **trocar a senha** é preciso gerar um novo cofre (`COFRE` no `admin/index.html`). Peça para quem
+  mantém o site.
+
 ## Identidade visual
 
 Segue o Manual de Identidade Visual da Bonese:
@@ -84,5 +108,7 @@ assets/js/config.js      ⚠️ dados da loja
 assets/js/menu.js        cardápio e adicionais
 assets/js/pix.js         gerador do Pix (BR Code + QR)
 assets/js/app.js         lógica do app
+assets/js/envio.js       envio criptografado do pedido para o painel
+admin/index.html         painel da loja (com senha)
 manifest.json            instalação na tela inicial
 ```
