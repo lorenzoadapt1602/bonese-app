@@ -156,6 +156,12 @@ dialog::backdrop { background: rgba(20,10,9,.6); }
 .dlg input { width: 100%; height: 48px; border: 1.5px solid var(--line); border-radius: 10px; padding: 0 12px; font-family: monospace; }
 .dlg .erro { min-height: 18px; margin-top: 8px; color: var(--coral); font-weight: 700; font-size: 13.5px; }
 .dlg-btns { display: flex; gap: 10px; justify-content: flex-end; margin-top: 8px; }
+.add-item { min-height: 120px; border: 2px dashed var(--line); border-radius: 16px; background: transparent; color: var(--vinho); font-weight: 800; font-size: 16px; }
+.add-item:hover { border-color: var(--coral); color: var(--coral); background: #fff; }
+.tag-novo { align-self: flex-start; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .05em; padding: 3px 8px; border-radius: 6px; background: rgba(233,185,79,.3); color: #6b4d07; }
+.precos select { height: 38px; border: 1.5px solid var(--line); border-radius: 9px; padding: 0 8px; background: var(--paper); font-weight: 700; text-transform: none; }
+.item.oculto { opacity: .55; background: #efe6dc; }
+.aviso-oculto { font-size: 12.5px; font-weight: 800; color: var(--coral); }
 .aviso-ok { margin: 14px 24px 0; padding: 14px 18px; border-radius: 12px; background: #e3f5e9; color: #0f5a2b; font-weight: 700; }
 @media (max-width: 600px) { .itens-ed { grid-template-columns: 1fr; } .item { grid-template-columns: 92px 1fr; } .foto { width: 92px; height: 92px; } .abas { padding: 8px 14px 0; } }
 #ticket { display: none; }
@@ -564,7 +570,7 @@ document.addEventListener("visibilitychange", () => { if (!document.hidden) tela
 const GH = Object.assign({ owner: "lorenzoadapt1602", repo: "bonese-app", branch: "main" }, (window.CONFIG && CONFIG.github) || {});
 const MENU = window.MENU || { categories: [], products: [] };
 const BASE = {};
-MENU.products.forEach((p) => { BASE[p.id] = { name: p.name, desc: p.desc || "", short: p.short, price: p.price, combo: p.combo, photo: p.photo || "", available: p.available !== false, cat: p.cat, code: p.code }; });
+MENU.products.forEach((p) => { BASE[p.id] = { name: p.name, desc: p.desc || "", short: p.short, price: p.price, combo: p.combo, photo: p.photo || "", available: p.available !== false, hidden: false, cat: p.cat, code: p.code }; });
 let publicado = { v: 1, atualizado: null, produtos: {} };
 let rascunho = LS.get("rascunho", {});   // { id: { campo: valor } }
 let fotosNovas = {};                       // { id: dataURL } (não persiste: imagens são grandes)
@@ -594,6 +600,49 @@ async function carregarPublicado() {
   const t = (x) => (x && x.atualizado ? Date.parse(x.atualizado) : 0);
   publicado = (t(local) > t(remoto) ? local : remoto) || publicado;
   publicado.produtos = publicado.produtos || {};
+  publicado.novos = publicado.novos || [];
+}
+
+// ---------- produtos adicionados pela loja ----------
+const CAMPOS_NOVO = ["cat", "name", "desc", "price", "combo", "addons", "available"];
+const ADDONS_PADRAO = { burgers: "burger", xis: "xis", premium: "xis" };
+let novosRasc = LS.get("novos_rasc", null); // cópia de trabalho; null = igual ao publicado
+function novosAtual() { if (!novosRasc) novosRasc = JSON.parse(JSON.stringify(publicado.novos || [])); return novosRasc; }
+const salvarNovos = () => LS.set("novos_rasc", novosRasc);
+function novoMudou(n) {
+  if (fotosNovas[n.id]) return true;
+  const pub = (publicado.novos || []).find((x) => x.id === n.id);
+  if (!pub) return true;
+  return CAMPOS_NOVO.some((k) => (k === "price" || k === "combo") ? paraNumero(n[k]) !== paraNumero(pub[k]) : String(n[k] ?? "") !== String(pub[k] ?? ""));
+}
+const novosExcluidos = () => (publicado.novos || []).filter((p) => !novosAtual().some((n) => n.id === p.id));
+function itemNovoHTML(n) {
+  const foto = fotosNovas[n.id] || fotoSrc(n.photo);
+  const esg = n.available === false;
+  return `<div class="item novo${novoMudou(n) ? " mudou" : ""}${esg ? " esg" : ""}" data-novo="${n.id}">
+    <label class="foto${fotosNovas[n.id] ? " nova" : ""}" title="Escolher foto">${foto ? `<img src="${esc(foto)}" alt="">` : ""}<span>${foto ? "Trocar foto" : "Escolher foto"}</span><input type="file" accept="image/*" data-foto></label>
+    <div class="campos">
+      <span class="tag-novo">Produto adicionado pela loja</span>
+      <input class="nome" data-n="name" value="${esc(n.name)}" placeholder="Nome do produto" aria-label="Nome">
+      <textarea data-n="desc" rows="2" placeholder="Descrição (ingredientes, tamanho…)">${esc(n.desc || "")}</textarea>
+      <div class="precos">
+        <label>Categoria<select data-n="cat">${MENU.categories.map((c) => `<option value="${c.id}" ${c.id === n.cat ? "selected" : ""}>${esc(c.name)}</option>`).join("")}</select></label>
+        <label>Preço R$<input data-n="price" inputmode="decimal" value="${precoTxt(n.price)}" placeholder="0,00"></label>
+        <label>Combo R$<input data-n="combo" inputmode="decimal" value="${precoTxt(n.combo)}" placeholder="opcional"></label>
+        <label>Adicionais<select data-n="addons"><option value="">Nenhum</option><option value="burger" ${n.addons === "burger" ? "selected" : ""}>De burger</option><option value="xis" ${n.addons === "xis" ? "selected" : ""}>De xis</option></select></label>
+        <label class="disp"><input type="checkbox" data-n="available" ${esg ? "" : "checked"}> Disponível</label>
+        <button class="rst" type="button" data-excluir>Excluir produto</button>
+      </div>
+    </div>
+  </div>`;
+}
+function adicionarProduto(cat) {
+  const n = { id: "n" + Date.now().toString(36), cat, name: "", desc: "", price: "", combo: "", photo: "", addons: ADDONS_PADRAO[cat] || "", available: true };
+  novosAtual().push(n); salvarNovos();
+  buscaItem = ""; $("#busca-item").value = "";
+  desenharCardapio();
+  const el = $(`#cardapio [data-novo="${n.id}"]`);
+  if (el) { el.scrollIntoView({ behavior: "smooth", block: "center" }); el.querySelector("[data-n=name]").focus({ preventScroll: true }); }
 }
 
 function desenharGh() {
@@ -606,9 +655,10 @@ function desenharGh() {
 function itemHTML(id) {
   const b = BASE[id];
   const esg = valorAtual(id, "available") === false;
+  const oculto = valorAtual(id, "hidden") === true;
   const foto = fotosNovas[id] || fotoSrc(valorAtual(id, "photo"));
   const curto = b.short !== undefined;
-  return `<div class="item${mudou(id) ? " mudou" : ""}${esg ? " esg" : ""}" data-id="${id}">
+  return `<div class="item${mudou(id) ? " mudou" : ""}${esg ? " esg" : ""}${oculto ? " oculto" : ""}" data-id="${id}">
     <label class="foto${fotosNovas[id] ? " nova" : ""}" title="Trocar foto">${foto ? `<img src="${esc(foto)}" alt="" loading="lazy">` : ""}<span>Trocar foto</span><input type="file" accept="image/*" data-foto></label>
     <div class="campos">
       <input class="nome" data-k="name" value="${esc(valorAtual(id, "name"))}" aria-label="Nome">
@@ -618,18 +668,23 @@ function itemHTML(id) {
         <label>Preço R$<input data-k="price" inputmode="decimal" value="${precoTxt(valorAtual(id, "price"))}"></label>
         ${b.combo ? `<label>Combo R$<input data-k="combo" inputmode="decimal" value="${precoTxt(valorAtual(id, "combo"))}"></label>` : ""}
         <label class="disp"><input type="checkbox" data-k="available" ${esg ? "" : "checked"}> Disponível</label>
+        <button class="rst" type="button" data-ocultar>${oculto ? "Recolocar no cardápio" : "Remover do cardápio"}</button>
         ${publicado.produtos[id] || rascunho[id] || fotosNovas[id] ? `<button class="rst" type="button" data-reset>Voltar ao original</button>` : ""}
       </div>
+      ${oculto ? `<div class="aviso-oculto">Removido: não aparece no site.</div>` : ""}
     </div>
   </div>`;
 }
 
 function desenharCardapio() {
   const q = buscaItem.trim().toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+  const bate = (txt) => !q || String(txt || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").includes(q);
   const cats = MENU.categories.map((c) => {
     const ids = MENU.products.filter((p) => p.cat === c.id).map((p) => p.id)
-      .filter((id) => !q || (valorAtual(id, "name") + " " + (BASE[id].code || "")).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").includes(q));
-    return ids.length ? `<div class="cat-tit">${esc(c.name)}</div><div class="itens-ed">${ids.map(itemHTML).join("")}</div>` : "";
+      .filter((id) => bate(valorAtual(id, "name") + " " + (BASE[id].code || "")));
+    const ns = novosAtual().filter((n) => n.cat === c.id && bate(n.name || "novo produto"));
+    if (q && !ids.length && !ns.length) return "";
+    return `<div class="cat-tit">${esc(c.name)}</div><div class="itens-ed">${ids.map(itemHTML).join("")}${ns.map(itemNovoHTML).join("")}<button type="button" class="add-item" data-add="${c.id}">+ Adicionar produto em ${esc(c.name)}</button></div>`;
   }).join("");
   $("#cardapio").innerHTML = cats || `<div class="vazio"><b>Nenhum item encontrado</b></div>`;
   atualizarBarraPublicar();
@@ -641,13 +696,27 @@ function atualizarItem(id) {
   el.classList.toggle("esg", valorAtual(id, "available") === false);
   atualizarBarraPublicar();
 }
+function atualizarNovo(n) {
+  const el = $(`#cardapio [data-novo="${n.id}"]`);
+  if (el) { el.classList.toggle("mudou", novoMudou(n)); el.classList.toggle("esg", n.available === false); }
+  atualizarBarraPublicar();
+}
+function totalMudancas() {
+  return MENU.products.filter((p) => mudou(p.id)).length + novosAtual().filter(novoMudou).length + novosExcluidos().length;
+}
 function atualizarBarraPublicar() {
-  const n = MENU.products.filter((p) => mudou(p.id)).length;
+  const n = totalMudancas();
   $("#publicar").hidden = n === 0;
   $("#pub-info").textContent = `${n} ${n === 1 ? "item alterado" : "itens alterados"}, ainda não publicado${n === 1 ? "" : "s"} no site`;
 }
 
+const novoDoEvento = (e) => { const el = e.target.closest("[data-novo]"); return el ? novosAtual().find((n) => n.id === el.dataset.novo) : null; };
 $("#cardapio").addEventListener("input", (e) => {
+  const nk = e.target.dataset.n;
+  if (nk && nk !== "available" && nk !== "cat") {
+    const n = novoDoEvento(e); if (!n) return;
+    n[nk] = e.target.value; salvarNovos(); return atualizarNovo(n);
+  }
   const k = e.target.dataset.k; if (!k || k === "available") return;
   const id = e.target.closest(".item").dataset.id;
   const r = rascunho[id] && !rascunho[id].__reset ? rascunho[id] : (rascunho[id] = {});
@@ -657,8 +726,18 @@ $("#cardapio").addEventListener("input", (e) => {
 });
 $("#cardapio").addEventListener("change", async (e) => {
   const item = e.target.closest(".item"); if (!item) return;
-  const id = item.dataset.id;
-  if (e.target.dataset.k === "available") {
+  const n = item.dataset.novo ? novoDoEvento(e) : null;
+  if (n && e.target.dataset.n === "available") { n.available = e.target.checked; salvarNovos(); return atualizarNovo(n); }
+  if (n && e.target.dataset.n === "cat") {
+    n.cat = e.target.value;
+    if (!n.addons && ADDONS_PADRAO[n.cat]) n.addons = ADDONS_PADRAO[n.cat];
+    salvarNovos(); desenharCardapio();
+    const el = $(`#cardapio [data-novo="${n.id}"]`); if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+    return;
+  }
+  if (n && e.target.dataset.n === "addons") { n.addons = e.target.value; salvarNovos(); return atualizarNovo(n); }
+  const id = n ? n.id : item.dataset.id;
+  if (!n && e.target.dataset.k === "available") {
     const r = rascunho[id] && !rascunho[id].__reset ? rascunho[id] : (rascunho[id] = {});
     r.available = e.target.checked;
     LS.set("rascunho", rascunho);
@@ -671,11 +750,26 @@ $("#cardapio").addEventListener("change", async (e) => {
       box.classList.add("nova");
       let img = box.querySelector("img"); if (!img) { img = document.createElement("img"); box.prepend(img); }
       img.src = fotosNovas[id];
-      atualizarItem(id);
+      box.querySelector("span").textContent = "Trocar foto";
+      if (n) atualizarNovo(n); else atualizarItem(id);
     } catch (x) { alert("Não consegui abrir essa imagem. Use uma foto JPG ou PNG."); }
   }
 });
 $("#cardapio").addEventListener("click", (e) => {
+  const add = e.target.closest("[data-add]");
+  if (add) return adicionarProduto(add.dataset.add);
+  if (e.target.closest("[data-excluir]")) {
+    const n = novoDoEvento(e); if (!n) return;
+    if (!confirm(`Excluir "${n.name || "produto novo"}" do cardápio?`)) return;
+    novosRasc = novosAtual().filter((x) => x !== n); delete fotosNovas[n.id]; salvarNovos(); return desenharCardapio();
+  }
+  if (e.target.closest("[data-ocultar]")) {
+    const id = e.target.closest(".item").dataset.id;
+    const r = rascunho[id] && !rascunho[id].__reset ? rascunho[id] : (rascunho[id] = {});
+    r.hidden = !(valorAtual(id, "hidden") === true);
+    LS.set("rascunho", rascunho);
+    e.target.closest(".item").outerHTML = itemHTML(id); return atualizarBarraPublicar();
+  }
   if (!e.target.closest("[data-reset]")) return;
   const id = e.target.closest(".item").dataset.id;
   delete fotosNovas[id];
@@ -687,7 +781,7 @@ let tBusca;
 $("#busca-item").addEventListener("input", (e) => { clearTimeout(tBusca); tBusca = setTimeout(() => { buscaItem = e.target.value; desenharCardapio(); }, 150); });
 $("#descartar").addEventListener("click", () => {
   if (!confirm("Descartar todas as alterações que ainda não foram publicadas?")) return;
-  rascunho = {}; fotosNovas = {}; LS.set("rascunho", rascunho); desenharCardapio();
+  rascunho = {}; fotosNovas = {}; novosRasc = null; LS.set("rascunho", rascunho); LS.del("novos_rasc"); desenharCardapio();
 });
 
 // foto: recorta quadrada no centro, 900x900, JPG (~150 KB)
@@ -720,6 +814,8 @@ async function gravarArquivo(caminho, conteudoB64, mensagem) {
 $("#pub-btn").addEventListener("click", async () => {
   if (!TOKEN) return abrirDlgGh();
   const ids = MENU.products.filter((p) => mudou(p.id)).map((p) => p.id);
+  const novosMud = novosAtual().filter(novoMudou);
+  const total = totalMudancas();
   // valida preços
   for (const id of ids) {
     const r = rascunho[id] || {};
@@ -727,20 +823,26 @@ $("#pub-btn").addEventListener("click", async () => {
       alert(`Preço inválido em "${valorAtual(id, "name")}". Use um valor como 34,90.`); return;
     }
   }
+  for (const n of novosAtual()) {
+    const el = () => { const x = $(`#cardapio [data-novo="${n.id}"]`); if (x) x.scrollIntoView({ behavior: "smooth", block: "center" }); };
+    if (!String(n.name || "").trim()) { el(); alert("Dê um nome para o produto novo."); return; }
+    if (!(paraNumero(n.price) > 0)) { el(); alert(`Coloque o preço de "${n.name}". Use um valor como 34,90.`); return; }
+    if (String(n.combo ?? "").trim() && !(paraNumero(n.combo) > 0)) { el(); alert(`Preço do combo inválido em "${n.name}". Deixe vazio se não tiver combo.`); return; }
+  }
   const btn = $("#pub-btn"); btn.disabled = true; $("#descartar").disabled = true;
   try {
     const novo = JSON.parse(JSON.stringify(publicado));
     let i = 0;
     for (const id of ids) {
-      btn.textContent = `Publicando ${++i}/${ids.length}…`;
+      btn.textContent = `Publicando ${++i}/${total}…`;
       const r = rascunho[id] || {};
       if (r.__reset && !fotosNovas[id]) { delete novo.produtos[id]; continue; }
       const o = r.__reset ? {} : Object.assign({}, novo.produtos[id] || {});
       if (!r.__reset) Object.keys(r).forEach((k) => {
         let v = r[k];
         if (k === "price" || k === "combo") v = paraNumero(v);
-        if (k === "available") v = !!v;
-        if (k !== "price" && k !== "combo" && k !== "available") v = String(v).trim();
+        if (k === "available" || k === "hidden") v = v === true || v === "true";
+        if (k !== "price" && k !== "combo" && k !== "available" && k !== "hidden") v = String(v).trim();
         o[k] = v;
       });
       if (fotosNovas[id]) {
@@ -752,13 +854,28 @@ $("#pub-btn").addEventListener("click", async () => {
       Object.keys(o).forEach((k) => { if (JSON.stringify(o[k]) === JSON.stringify(BASE[id][k])) delete o[k]; });
       if (Object.keys(o).length) novo.produtos[id] = o; else delete novo.produtos[id];
     }
+    // produtos adicionados pela loja
+    for (const n of novosAtual()) {
+      if (!fotosNovas[n.id]) continue;
+      btn.textContent = `Publicando ${++i}/${total}…`;
+      const caminho = `assets/img/fotos/${n.id}-${Date.now().toString(36)}.jpg`;
+      await gh(`contents/${caminho}`, { method: "PUT", body: JSON.stringify({ message: `Foto: ${n.name}`, content: fotosNovas[n.id].split(",")[1], branch: GH.branch }) });
+      n.photo = caminho;
+    }
+    novo.novos = novosAtual().map((n) => {
+      const o = { id: n.id, cat: n.cat, name: String(n.name).trim(), desc: String(n.desc || "").trim(), price: paraNumero(n.price), available: n.available !== false };
+      if (paraNumero(n.combo) > 0) o.combo = paraNumero(n.combo);
+      if (n.photo) o.photo = n.photo;
+      if (n.addons) o.addons = n.addons;
+      return o;
+    });
     novo.atualizado = new Date().toISOString();
     btn.textContent = "Salvando cardápio…";
-    await gravarArquivo("assets/data/cardapio.json", utf8b64(JSON.stringify(novo, null, 2) + "\n"), `Cardápio atualizado pelo painel (${ids.length} ${ids.length === 1 ? "item" : "itens"})`);
+    await gravarArquivo("assets/data/cardapio.json", utf8b64(JSON.stringify(novo, null, 2) + "\n"), `Cardápio atualizado pelo painel (${total} ${total === 1 ? "alteração" : "alterações"})`);
     publicado = novo; LS.set("publicado", novo);
-    rascunho = {}; fotosNovas = {}; LS.set("rascunho", rascunho);
+    rascunho = {}; fotosNovas = {}; novosRasc = null; LS.set("rascunho", rascunho); LS.del("novos_rasc");
     desenharCardapio();
-    mostrarAviso(`Publicado! O site mostra as mudanças em cerca de 1 minuto (${ids.length} ${ids.length === 1 ? "item" : "itens"}).`);
+    mostrarAviso(`Publicado! O site mostra as mudanças em cerca de 1 minuto (${total} ${total === 1 ? "alteração" : "alterações"}).`);
   } catch (e) {
     if (e.status === 401 || e.status === 403) alert("A chave do GitHub não tem permissão ou expirou. Conecte de novo em \"Conexão\".");
     else alert("Não deu para publicar agora (" + e.message + "). Confira a internet e tente de novo. Suas alterações continuam salvas aqui.");
