@@ -22,7 +22,7 @@
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
 body { margin: 0; min-height: 100vh; background: var(--paper-2); color: var(--ink); font-family: var(--body); font-size: 15px; }
-button, input { font: inherit; }
+button, input, textarea { font: inherit; }
 button { cursor: pointer; }
 .faixa-marca { display: flex; height: 6px; } .faixa-marca i { flex: 1; }
 .faixa-marca i:nth-child(1) { background: var(--mostarda); } .faixa-marca i:nth-child(2) { background: var(--coral); } .faixa-marca i:nth-child(3) { background: var(--vinho); }
@@ -109,6 +109,55 @@ main { padding: 8px 24px 40px; }
   .lista { grid-template-columns: 1fr; }
   .acao.dir { margin-left: 0; }
 }
+/* abas */
+.abas { display: flex; gap: 6px; padding: 10px 24px 0; background: var(--vinho); }
+.abas button { border: 0; border-radius: 12px 12px 0 0; padding: 12px 26px; font-weight: 800; font-size: 16px; background: rgba(255,255,255,.12); color: #fff; }
+.abas button.on { background: var(--paper-2); color: var(--vinho); }
+/* cardápio */
+.busca { flex: 1; min-width: 200px; max-width: 420px; height: 42px; border-radius: 10px; border: 1.5px solid var(--line); padding: 0 14px; background: var(--paper); }
+.gh { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; color: var(--ink-2); }
+.gh i { width: 10px; height: 10px; border-radius: 50%; background: #d9b9a8; }
+.gh.ok { color: var(--ok); } .gh.ok i { background: var(--ok); }
+.cat-tit { margin: 22px 0 10px; font-family: var(--display); font-size: 30px; color: var(--vinho); text-transform: uppercase; }
+.itens-ed { display: grid; grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); gap: 12px; }
+.item { display: grid; grid-template-columns: 120px 1fr; gap: 14px; background: #fff; border: 1.5px solid var(--line); border-radius: 16px; padding: 14px; }
+.item.mudou { border-color: var(--mostarda); box-shadow: 0 0 0 4px rgba(233,185,79,.25); }
+.item.esg { background: #f3ece4; }
+.item.esg .foto img { filter: grayscale(1); opacity: .6; }
+.foto { position: relative; width: 120px; height: 120px; border-radius: 12px; overflow: hidden; cursor: pointer; background: var(--paper-2); }
+.foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.foto span { position: absolute; left: 0; right: 0; bottom: 0; padding: 6px 4px; background: rgba(42,21,19,.78); color: #fff; font-size: 12px; font-weight: 800; text-align: center; }
+.foto input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.foto.nova::after { content: "NOVA"; position: absolute; top: 6px; left: 6px; background: var(--mostarda); color: var(--ink); font-size: 10px; font-weight: 900; padding: 2px 6px; border-radius: 4px; }
+.campos { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.campos input, .campos textarea { width: 100%; border: 1.5px solid var(--line); border-radius: 9px; padding: 8px 10px; background: var(--paper); color: var(--ink); }
+.campos input:focus, .campos textarea:focus { outline: none; border-color: var(--coral); }
+.campos .nome { font-weight: 800; font-size: 16px; }
+.campos textarea { resize: vertical; min-height: 54px; font-size: 13.5px; line-height: 1.4; }
+.campos small { font-size: 11.5px; font-weight: 700; color: var(--ink-2); text-transform: uppercase; letter-spacing: .05em; margin-bottom: -4px; }
+.precos { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px; }
+.precos label { display: flex; flex-direction: column; gap: 3px; font-size: 11.5px; font-weight: 800; color: var(--ink-2); text-transform: uppercase; }
+.precos label input { width: 110px; font-weight: 800; font-size: 15px; text-transform: none; }
+.precos .disp { flex-direction: row; align-items: center; gap: 6px; font-size: 13px; text-transform: none; cursor: pointer; padding-bottom: 8px; }
+.precos .disp input { width: 18px; height: 18px; accent-color: var(--ok); }
+.precos .rst { margin-left: auto; border: 0; background: none; color: var(--coral); font-weight: 800; font-size: 13px; padding: 0 0 8px; }
+.publicar { position: sticky; bottom: 0; display: flex; align-items: center; gap: 12px; padding: 14px 24px; background: var(--ink); color: #fff; box-shadow: 0 -10px 30px rgba(0,0,0,.2); z-index: 5; }
+.publicar span { flex: 1; font-weight: 700; }
+.acao.pri { background: var(--coral); border-color: var(--coral); color: #fff; }
+.acao.pri:hover { filter: brightness(1.08); color: #fff; }
+.acao:disabled { opacity: .6; cursor: wait; }
+dialog { border: 0; border-radius: 20px; padding: 0; max-width: 540px; width: calc(100% - 32px); box-shadow: 0 30px 80px rgba(0,0,0,.4); }
+dialog::backdrop { background: rgba(20,10,9,.6); }
+.dlg { padding: 26px; }
+.dlg h2 { margin: 0 0 8px; font-family: var(--display); font-weight: 400; font-size: 34px; color: var(--vinho); text-transform: uppercase; }
+.dlg p, .dlg li { font-size: 14.5px; line-height: 1.5; color: var(--ink); }
+.dlg ol { padding-left: 20px; margin: 8px 0 14px; }
+.dlg a { color: var(--coral); font-weight: 800; }
+.dlg input { width: 100%; height: 48px; border: 1.5px solid var(--line); border-radius: 10px; padding: 0 12px; font-family: monospace; }
+.dlg .erro { min-height: 18px; margin-top: 8px; color: var(--coral); font-weight: 700; font-size: 13.5px; }
+.dlg-btns { display: flex; gap: 10px; justify-content: flex-end; margin-top: 8px; }
+.aviso-ok { margin: 14px 24px 0; padding: 14px 18px; border-radius: 12px; background: #e3f5e9; color: #0f5a2b; font-weight: 700; }
+@media (max-width: 600px) { .itens-ed { grid-template-columns: 1fr; } .item { grid-template-columns: 92px 1fr; } .foto { width: 92px; height: 92px; } .abas { padding: 8px 14px 0; } }
 #ticket { display: none; }
 @media print {
   body { background: #fff; }
@@ -154,6 +203,27 @@ main { padding: 8px 24px 40px; }
     <h1>Pedidos da loja<small>Bonese Food Park · Lajeado</small></h1>
     <div class="estado" id="estado"><i></i><span>Conectando...</span></div>
   </header>
+  <nav class="abas" id="abas">
+    <button data-aba="pedidos" class="on">Pedidos</button>
+    <button data-aba="cardapio">Cardápio</button>
+  </nav>
+
+  <div id="aba-cardapio" hidden>
+    <div class="barra">
+      <div class="gh" id="gh-estado"></div>
+      <input id="busca-item" class="busca" type="search" placeholder="Buscar item do cardápio…">
+      <button class="acao dir" id="gh-conectar">Conectar ao GitHub</button>
+    </div>
+    <div class="faixa dica"><span>Troque a <b>foto</b>, o <b>nome</b>, a <b>descrição</b> e os <b>preços</b>, ou marque um item como <b>esgotado</b>. Nada muda no site até você clicar em <b>Publicar no site</b>. Depois disso, o site atualiza em cerca de 1 minuto.</span></div>
+    <main id="cardapio"></main>
+    <div class="publicar" id="publicar" hidden>
+      <span id="pub-info"></span>
+      <button class="acao" id="descartar">Descartar</button>
+      <button class="acao pri" id="pub-btn">Publicar no site</button>
+    </div>
+  </div>
+
+  <div id="aba-pedidos">
   <div class="barra">
     <div class="grupo">Imprimir sozinho <button class="chave" id="auto" aria-label="Imprimir pedidos automaticamente"></button></div>
     <div class="grupo">Vias <span class="seg" id="vias"><button data-v="1">1</button><button data-v="2">2</button></span></div>
@@ -170,10 +240,32 @@ main { padding: 8px 24px 40px; }
   <div class="resumo" id="resumo"></div>
   <div class="filtros" id="filtros"></div>
   <main id="main"></main>
+  </div>
 </div>
 <div id="ticket"></div>
 
+<dialog id="dlg-gh">
+  <form method="dialog" class="dlg">
+    <h2>Conectar ao GitHub</h2>
+    <p>Para publicar o cardápio, este aparelho precisa de uma <b>chave de acesso do GitHub</b> (feito uma vez só por aparelho):</p>
+    <ol>
+      <li>Abra <a id="gh-link" target="_blank" rel="noopener">este link</a> com a conta do GitHub dona do site.</li>
+      <li>Em <b>Repository access</b>, escolha <b>Only select repositories</b> e selecione <b id="gh-repo"></b>.</li>
+      <li>Em <b>Permissions › Repository permissions</b>, deixe <b>Contents</b> como <b>Read and write</b>.</li>
+      <li>Clique em <b>Generate token</b>, copie a chave e cole abaixo.</li>
+    </ol>
+    <input id="gh-token" type="password" autocomplete="off" placeholder="github_pat_…">
+    <div class="erro" id="gh-erro"></div>
+    <div class="dlg-btns">
+      <button value="cancel" class="acao" type="button" id="gh-cancelar">Cancelar</button>
+      <button class="acao" type="button" id="gh-sair" hidden>Desconectar</button>
+      <button class="acao pri" type="button" id="gh-salvar">Conectar</button>
+    </div>
+  </form>
+</dialog>
+
 <script src="../assets/js/config.js"></script>
+<script src="../assets/js/menu.js"></script>
 <script>
 "use strict";
 // Pedidos chegam criptografados pelo canal abaixo; a chave da loja fica guardada aqui, protegida pela senha.
@@ -463,6 +555,258 @@ $("#baixar-atalho").addEventListener("click", () => {
 
 async function telaLigada() { try { if ("wakeLock" in navigator) await navigator.wakeLock.request("screen"); } catch (e) {} }
 document.addEventListener("visibilitychange", () => { if (!document.hidden) telaLigada(); });
+
+// =============================================================
+// CARDÁPIO: a loja edita foto, nome, descrição, preços e esgotado.
+// Publica em assets/data/cardapio.json (e fotos em assets/img/fotos/)
+// pelo GitHub, usando a chave de acesso guardada só neste aparelho.
+// =============================================================
+const GH = Object.assign({ owner: "lorenzoadapt1602", repo: "bonese-app", branch: "main" }, (window.CONFIG && CONFIG.github) || {});
+const MENU = window.MENU || { categories: [], products: [] };
+const BASE = {};
+MENU.products.forEach((p) => { BASE[p.id] = { name: p.name, desc: p.desc || "", short: p.short, price: p.price, combo: p.combo, photo: p.photo || "", available: p.available !== false, cat: p.cat, code: p.code }; });
+let publicado = { v: 1, atualizado: null, produtos: {} };
+let rascunho = LS.get("rascunho", {});   // { id: { campo: valor } }
+let fotosNovas = {};                       // { id: dataURL } (não persiste: imagens são grandes)
+let buscaItem = "";
+let TOKEN = LS.get("gh", null);
+
+const fotoSrc = (ref) => !ref ? "" : /^photo-/.test(ref) ? `https://images.unsplash.com/${ref}?auto=format&fit=crop&w=240&h=240&q=60` : /^https?:/.test(ref) ? ref : "../" + ref;
+const paraNumero = (s) => { const v = parseFloat(String(s ?? "").replace(/[^\d,.]/g, "").replace(/\.(?=\d{3}(\D|$))/g, "").replace(",", ".")); return isNaN(v) ? null : Math.round(v * 100) / 100; };
+const precoTxt = (v) => v == null || v === "" ? "" : typeof v === "string" ? v : Number(v).toFixed(2).replace(".", ",");
+function valorPublicado(id, k) { const o = publicado.produtos[id]; return o && o[k] !== undefined ? o[k] : BASE[id][k]; }
+function valorAtual(id, k) { const r = rascunho[id]; if (r && r.__reset) return BASE[id][k]; return r && r[k] !== undefined ? r[k] : valorPublicado(id, k); }
+function mudou(id) {
+  if (fotosNovas[id]) return true;
+  const r = rascunho[id]; if (!r) return false;
+  if (r.__reset) return !!publicado.produtos[id];
+  return Object.keys(r).some((k) => {
+    const a = r[k], b = valorPublicado(id, k);
+    if (k === "price" || k === "combo") return paraNumero(a) !== (b == null ? null : Number(b));
+    return String(a) !== String(b ?? "");
+  });
+}
+
+async function carregarPublicado() {
+  let remoto = null;
+  try { const r = await fetch(`../assets/data/cardapio.json?v=${Date.now()}`, { cache: "no-store" }); if (r.ok) remoto = await r.json(); } catch (e) {}
+  const local = LS.get("publicado", null); // última publicação feita deste aparelho (o site pode levar ~1 min para mostrar)
+  const t = (x) => (x && x.atualizado ? Date.parse(x.atualizado) : 0);
+  publicado = (t(local) > t(remoto) ? local : remoto) || publicado;
+  publicado.produtos = publicado.produtos || {};
+}
+
+function desenharGh() {
+  const el = $("#gh-estado");
+  el.className = "gh" + (TOKEN ? " ok" : "");
+  el.innerHTML = `<i></i>${TOKEN ? "Conectado ao GitHub: pode publicar" : "Não conectado: conecte para publicar"}`;
+  $("#gh-conectar").textContent = TOKEN ? "Conexão" : "Conectar ao GitHub";
+}
+
+function itemHTML(id) {
+  const b = BASE[id];
+  const esg = valorAtual(id, "available") === false;
+  const foto = fotosNovas[id] || fotoSrc(valorAtual(id, "photo"));
+  const curto = b.short !== undefined;
+  return `<div class="item${mudou(id) ? " mudou" : ""}${esg ? " esg" : ""}" data-id="${id}">
+    <label class="foto${fotosNovas[id] ? " nova" : ""}" title="Trocar foto">${foto ? `<img src="${esc(foto)}" alt="" loading="lazy">` : ""}<span>Trocar foto</span><input type="file" accept="image/*" data-foto></label>
+    <div class="campos">
+      <input class="nome" data-k="name" value="${esc(valorAtual(id, "name"))}" aria-label="Nome">
+      ${curto ? `<small>Descrição no card</small><textarea data-k="short" rows="2">${esc(valorAtual(id, "short"))}</textarea><small>Descrição completa</small>` : ""}
+      <textarea data-k="desc" rows="2" placeholder="Descrição (opcional)">${esc(valorAtual(id, "desc"))}</textarea>
+      <div class="precos">
+        <label>Preço R$<input data-k="price" inputmode="decimal" value="${precoTxt(valorAtual(id, "price"))}"></label>
+        ${b.combo ? `<label>Combo R$<input data-k="combo" inputmode="decimal" value="${precoTxt(valorAtual(id, "combo"))}"></label>` : ""}
+        <label class="disp"><input type="checkbox" data-k="available" ${esg ? "" : "checked"}> Disponível</label>
+        ${publicado.produtos[id] || rascunho[id] || fotosNovas[id] ? `<button class="rst" type="button" data-reset>Voltar ao original</button>` : ""}
+      </div>
+    </div>
+  </div>`;
+}
+
+function desenharCardapio() {
+  const q = buscaItem.trim().toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+  const cats = MENU.categories.map((c) => {
+    const ids = MENU.products.filter((p) => p.cat === c.id).map((p) => p.id)
+      .filter((id) => !q || (valorAtual(id, "name") + " " + (BASE[id].code || "")).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").includes(q));
+    return ids.length ? `<div class="cat-tit">${esc(c.name)}</div><div class="itens-ed">${ids.map(itemHTML).join("")}</div>` : "";
+  }).join("");
+  $("#cardapio").innerHTML = cats || `<div class="vazio"><b>Nenhum item encontrado</b></div>`;
+  atualizarBarraPublicar();
+}
+function atualizarItem(id) {
+  const el = $(`#cardapio .item[data-id="${id}"]`);
+  if (!el) return;
+  el.classList.toggle("mudou", mudou(id));
+  el.classList.toggle("esg", valorAtual(id, "available") === false);
+  atualizarBarraPublicar();
+}
+function atualizarBarraPublicar() {
+  const n = MENU.products.filter((p) => mudou(p.id)).length;
+  $("#publicar").hidden = n === 0;
+  $("#pub-info").textContent = `${n} ${n === 1 ? "item alterado" : "itens alterados"}, ainda não publicado${n === 1 ? "" : "s"} no site`;
+}
+
+$("#cardapio").addEventListener("input", (e) => {
+  const k = e.target.dataset.k; if (!k || k === "available") return;
+  const id = e.target.closest(".item").dataset.id;
+  const r = rascunho[id] && !rascunho[id].__reset ? rascunho[id] : (rascunho[id] = {});
+  r[k] = e.target.value;
+  LS.set("rascunho", rascunho);
+  atualizarItem(id);
+});
+$("#cardapio").addEventListener("change", async (e) => {
+  const item = e.target.closest(".item"); if (!item) return;
+  const id = item.dataset.id;
+  if (e.target.dataset.k === "available") {
+    const r = rascunho[id] && !rascunho[id].__reset ? rascunho[id] : (rascunho[id] = {});
+    r.available = e.target.checked;
+    LS.set("rascunho", rascunho);
+    return atualizarItem(id);
+  }
+  if (e.target.dataset.foto !== undefined && e.target.files && e.target.files[0]) {
+    try {
+      fotosNovas[id] = await prepararFoto(e.target.files[0]);
+      const box = item.querySelector(".foto");
+      box.classList.add("nova");
+      let img = box.querySelector("img"); if (!img) { img = document.createElement("img"); box.prepend(img); }
+      img.src = fotosNovas[id];
+      atualizarItem(id);
+    } catch (x) { alert("Não consegui abrir essa imagem. Use uma foto JPG ou PNG."); }
+  }
+});
+$("#cardapio").addEventListener("click", (e) => {
+  if (!e.target.closest("[data-reset]")) return;
+  const id = e.target.closest(".item").dataset.id;
+  delete fotosNovas[id];
+  if (publicado.produtos[id]) rascunho[id] = { __reset: true }; else delete rascunho[id];
+  LS.set("rascunho", rascunho);
+  const el = e.target.closest(".item"); el.outerHTML = itemHTML(id); atualizarBarraPublicar();
+});
+let tBusca;
+$("#busca-item").addEventListener("input", (e) => { clearTimeout(tBusca); tBusca = setTimeout(() => { buscaItem = e.target.value; desenharCardapio(); }, 150); });
+$("#descartar").addEventListener("click", () => {
+  if (!confirm("Descartar todas as alterações que ainda não foram publicadas?")) return;
+  rascunho = {}; fotosNovas = {}; LS.set("rascunho", rascunho); desenharCardapio();
+});
+
+// foto: recorta quadrada no centro, 900x900, JPG (~150 KB)
+async function prepararFoto(file) {
+  const bmp = await createImageBitmap(file);
+  const S = 900, lado = Math.min(bmp.width, bmp.height);
+  const c = document.createElement("canvas"); c.width = c.height = S;
+  const ctx = c.getContext("2d");
+  ctx.imageSmoothingQuality = "high";
+  ctx.drawImage(bmp, (bmp.width - lado) / 2, (bmp.height - lado) / 2, lado, lado, 0, 0, S, S);
+  bmp.close && bmp.close();
+  return c.toDataURL("image/jpeg", 0.82);
+}
+
+// ---------- GitHub ----------
+async function gh(caminho, opts = {}) {
+  const r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/${caminho}`, Object.assign({}, opts, {
+    headers: { Authorization: `Bearer ${TOKEN}`, Accept: "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28" },
+  }));
+  if (!r.ok) { const t = await r.text(); const err = new Error(`GitHub ${r.status}`); err.status = r.status; err.body = t; throw err; }
+  return r.status === 204 ? null : r.json();
+}
+const utf8b64 = (s) => b64(new TextEncoder().encode(s));
+async function gravarArquivo(caminho, conteudoB64, mensagem) {
+  let sha;
+  try { sha = (await gh(`contents/${caminho}?ref=${GH.branch}`)).sha; } catch (e) { if (e.status !== 404) throw e; }
+  return gh(`contents/${caminho}`, { method: "PUT", body: JSON.stringify({ message: mensagem, content: conteudoB64, branch: GH.branch, sha }) });
+}
+
+$("#pub-btn").addEventListener("click", async () => {
+  if (!TOKEN) return abrirDlgGh();
+  const ids = MENU.products.filter((p) => mudou(p.id)).map((p) => p.id);
+  // valida preços
+  for (const id of ids) {
+    const r = rascunho[id] || {};
+    for (const k of ["price", "combo"]) if (r[k] !== undefined && !r.__reset && (paraNumero(r[k]) == null || paraNumero(r[k]) <= 0)) {
+      alert(`Preço inválido em "${valorAtual(id, "name")}". Use um valor como 34,90.`); return;
+    }
+  }
+  const btn = $("#pub-btn"); btn.disabled = true; $("#descartar").disabled = true;
+  try {
+    const novo = JSON.parse(JSON.stringify(publicado));
+    let i = 0;
+    for (const id of ids) {
+      btn.textContent = `Publicando ${++i}/${ids.length}…`;
+      const r = rascunho[id] || {};
+      if (r.__reset && !fotosNovas[id]) { delete novo.produtos[id]; continue; }
+      const o = r.__reset ? {} : Object.assign({}, novo.produtos[id] || {});
+      if (!r.__reset) Object.keys(r).forEach((k) => {
+        let v = r[k];
+        if (k === "price" || k === "combo") v = paraNumero(v);
+        if (k === "available") v = !!v;
+        if (k !== "price" && k !== "combo" && k !== "available") v = String(v).trim();
+        o[k] = v;
+      });
+      if (fotosNovas[id]) {
+        const caminho = `assets/img/fotos/${id}-${Date.now().toString(36)}.jpg`;
+        await gh(`contents/${caminho}`, { method: "PUT", body: JSON.stringify({ message: `Foto nova: ${valorAtual(id, "name")}`, content: fotosNovas[id].split(",")[1], branch: GH.branch }) });
+        o.photo = caminho;
+      }
+      // guarda só o que difere do original
+      Object.keys(o).forEach((k) => { if (JSON.stringify(o[k]) === JSON.stringify(BASE[id][k])) delete o[k]; });
+      if (Object.keys(o).length) novo.produtos[id] = o; else delete novo.produtos[id];
+    }
+    novo.atualizado = new Date().toISOString();
+    btn.textContent = "Salvando cardápio…";
+    await gravarArquivo("assets/data/cardapio.json", utf8b64(JSON.stringify(novo, null, 2) + "\n"), `Cardápio atualizado pelo painel (${ids.length} ${ids.length === 1 ? "item" : "itens"})`);
+    publicado = novo; LS.set("publicado", novo);
+    rascunho = {}; fotosNovas = {}; LS.set("rascunho", rascunho);
+    desenharCardapio();
+    mostrarAviso(`Publicado! O site mostra as mudanças em cerca de 1 minuto (${ids.length} ${ids.length === 1 ? "item" : "itens"}).`);
+  } catch (e) {
+    if (e.status === 401 || e.status === 403) alert("A chave do GitHub não tem permissão ou expirou. Conecte de novo em \"Conexão\".");
+    else alert("Não deu para publicar agora (" + e.message + "). Confira a internet e tente de novo. Suas alterações continuam salvas aqui.");
+  } finally {
+    btn.disabled = false; $("#descartar").disabled = false; btn.textContent = "Publicar no site";
+  }
+});
+function mostrarAviso(txt) {
+  const a = document.createElement("div"); a.className = "aviso-ok"; a.textContent = txt;
+  $("#aba-cardapio").insertBefore(a, $("#cardapio")); setTimeout(() => a.remove(), 9000);
+}
+
+// diálogo de conexão
+function abrirDlgGh() {
+  const p = new URLSearchParams({ name: "Painel Bonese", description: "Publicar o cardápio pelo painel da loja", target_name: GH.owner, expires_in: "366", contents: "write" });
+  $("#gh-link").href = `https://github.com/settings/personal-access-tokens/new?${p}`;
+  $("#gh-repo").textContent = `${GH.owner}/${GH.repo}`;
+  $("#gh-token").value = ""; $("#gh-erro").textContent = "";
+  $("#gh-sair").hidden = !TOKEN;
+  $("#dlg-gh").showModal();
+}
+$("#gh-conectar").addEventListener("click", abrirDlgGh);
+$("#gh-cancelar").addEventListener("click", () => $("#dlg-gh").close());
+$("#gh-sair").addEventListener("click", () => { TOKEN = null; LS.del("gh"); desenharGh(); $("#dlg-gh").close(); });
+$("#gh-salvar").addEventListener("click", async () => {
+  const t = $("#gh-token").value.trim();
+  if (!t) { $("#gh-erro").textContent = "Cole a chave de acesso."; return; }
+  const btn = $("#gh-salvar"); btn.disabled = true; $("#gh-erro").textContent = "Verificando…";
+  const antigo = TOKEN; TOKEN = t;
+  try {
+    const repo = await gh("");
+    if (!repo.permissions || !repo.permissions.push) throw Object.assign(new Error("sem permissão"), { status: 403 });
+    LS.set("gh", TOKEN); desenharGh(); $("#dlg-gh").close();
+  } catch (e) {
+    TOKEN = antigo;
+    $("#gh-erro").textContent = e.status === 401 ? "Chave inválida." : e.status === 404 || e.status === 403 ? `Essa chave não tem acesso de escrita a ${GH.owner}/${GH.repo}.` : "Não consegui verificar. Confira a internet.";
+  }
+  btn.disabled = false;
+});
+
+// abas
+$("#abas").addEventListener("click", async (e) => {
+  const b = e.target.closest("[data-aba]"); if (!b) return;
+  $$("#abas button").forEach((x) => x.classList.toggle("on", x === b));
+  $("#aba-pedidos").hidden = b.dataset.aba !== "pedidos";
+  $("#aba-cardapio").hidden = b.dataset.aba !== "cardapio";
+  if (b.dataset.aba === "cardapio") { await carregarPublicado(); desenharGh(); desenharCardapio(); }
+});
 
 function iniciarPainel() {
   $("#entrada").hidden = true;
