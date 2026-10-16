@@ -73,6 +73,9 @@ item como **esgotado**. Ao clicar em **Publicar no site**, o painel grava as mud
 (`assets/data/cardapio.json` e as fotos em `assets/img/fotos/`) e o site atualiza em ~1 minuto.
 
 - As fotos enviadas são recortadas quadradas (900×900) e comprimidas no próprio aparelho.
+- **+ Adicionar produto** (no fim de cada categoria): cria um item novo com foto, nome, descrição, preço,
+  combo (opcional) e adicionais (de burger ou de xis). "Excluir produto" apaga um item criado pela loja.
+- **Remover do cardápio** esconde um item original do site (dá para recolocar depois).
 - "Voltar ao original" desfaz as mudanças de um item.
 - O que ainda não foi publicado fica salvo como rascunho no aparelho.
 
