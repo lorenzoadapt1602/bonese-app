@@ -1306,6 +1306,8 @@
 
   /* ---------------- início ---------------- */
   function init() {
+    // relê a sacola agora que os produtos novos/removidos da loja já foram aplicados
+    state.cart = store.get('bn_cart', []).filter((i) => P[i.pid] && !P[i.pid].hidden);
     if (history.state && history.state.bn) history.replaceState(null, '');
     $('#brandSub').innerHTML = `${esc(C.city)} · ${esc(C.state)} <a href="https://www.instagram.com/${C.instagram}/" target="_blank" rel="noopener">${ICON.insta}@${esc(C.instagram)}</a>`;
     if (M.heroPhoto) $('#heroBg').style.setProperty('--hero-img', `url("${photoUrl(M.heroPhoto, 1400, 900)}")`);
@@ -1325,7 +1327,7 @@
   }
 
   // Alterações feitas pela loja no painel (aba Cardápio) ficam em assets/data/cardapio.json
-  const EDITAVEIS = ['name', 'desc', 'short', 'price', 'combo', 'photo', 'available'];
+  const EDITAVEIS = ['name', 'desc', 'short', 'price', 'combo', 'photo', 'available', 'hidden'];
   async function carregarAlteracoes() {
     try {
       const ctrl = new AbortController();
@@ -1339,6 +1341,20 @@
         if (!p || !mud) return;
         EDITAVEIS.forEach((k) => { if (mud[k] !== undefined && mud[k] !== null && mud[k] !== '') p[k] = mud[k]; });
       });
+      // produtos adicionados pela loja
+      ((dados && dados.novos) || []).forEach((n) => {
+        if (!n || !n.id || P[n.id] || !CAT[n.cat] || !String(n.name || '').trim() || !(Number(n.price) > 0)) return;
+        const p = {
+          id: n.id, cat: n.cat, name: String(n.name).trim(), desc: n.desc || '', price: Number(n.price),
+          combo: Number(n.combo) > 0 ? Number(n.combo) : undefined,
+          photo: n.photo || undefined, available: n.available !== false, hidden: !!n.hidden,
+          addons: M.addons[n.addons] ? n.addons : undefined,
+        };
+        M.products.push(p);
+        P[p.id] = p;
+      });
+      // itens removidos do cardápio pela loja
+      M.products = M.products.filter((p) => !p.hidden);
     } catch (e) { /* sem alterações publicadas: usa o cardápio padrão */ }
   }
 
