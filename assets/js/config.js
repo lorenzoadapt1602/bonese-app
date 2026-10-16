@@ -81,6 +81,9 @@ window.CONFIG = {
     chavePublica: { kty: 'EC', crv: 'P-256', x: '4TcsfJe4BVPGcdXeDfmzbYj8GDcr8UmSRk6uhLVmJWQ', y: 'WwnDb263dwNKz3TIm-Lydo-ni5WC3WaipBN6-LnlbD0' },
   },
 
+  // Repositório onde o painel publica as alterações do cardápio (aba "Cardápio" do admin/)
+  github: { owner: 'lorenzoadapt1602', repo: 'bonese-app', branch: 'main' },
+
   // Promo "Se liga!": baldinho com 6 long necks ganha uma porção
   promoLongNeck: {
     enabled: true,

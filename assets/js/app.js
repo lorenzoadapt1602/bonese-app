@@ -1324,5 +1324,23 @@
     updateCartBar();
   }
 
-  init();
+  // Alterações feitas pela loja no painel (aba Cardápio) ficam em assets/data/cardapio.json
+  const EDITAVEIS = ['name', 'desc', 'short', 'price', 'combo', 'photo', 'available'];
+  async function carregarAlteracoes() {
+    try {
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), 3000);
+      const r = await fetch(`assets/data/cardapio.json?v=${Date.now()}`, { cache: 'no-store', signal: ctrl.signal });
+      clearTimeout(timer);
+      if (!r.ok) return;
+      const dados = await r.json();
+      Object.entries((dados && dados.produtos) || {}).forEach(([id, mud]) => {
+        const p = P[id];
+        if (!p || !mud) return;
+        EDITAVEIS.forEach((k) => { if (mud[k] !== undefined && mud[k] !== null && mud[k] !== '') p[k] = mud[k]; });
+      });
+    } catch (e) { /* sem alterações publicadas: usa o cardápio padrão */ }
+  }
+
+  carregarAlteracoes().then(init, init);
 })();
