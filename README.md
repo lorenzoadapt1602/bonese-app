@@ -66,6 +66,20 @@ Observações:
 - Para **trocar a senha** é preciso gerar um novo cofre (`COFRE` no `admin/index.html`). Peça para quem
   mantém o site.
 
+### Aba "Cardápio" (a loja edita sozinha)
+
+No painel, a aba **Cardápio** permite trocar **foto, nome, descrição, preço, preço do combo** e marcar
+item como **esgotado**. Ao clicar em **Publicar no site**, o painel grava as mudanças no repositório do GitHub
+(`assets/data/cardapio.json` e as fotos em `assets/img/fotos/`) e o site atualiza em ~1 minuto.
+
+- As fotos enviadas são recortadas quadradas (900×900) e comprimidas no próprio aparelho.
+- "Voltar ao original" desfaz as mudanças de um item.
+- O que ainda não foi publicado fica salvo como rascunho no aparelho.
+
+**Conectar ao GitHub (uma vez por aparelho):** clique em "Conectar ao GitHub" e siga os passos. O dono da conta
+`lorenzoadapt1602` cria uma *fine-grained token* com acesso **só** ao repositório `bonese-app` e permissão
+**Contents: Read and write**, e cola no painel. A chave fica guardada só naquele aparelho. Validade sugerida: 1 ano.
+
 ## Identidade visual
 
 Segue o Manual de Identidade Visual da Bonese:
